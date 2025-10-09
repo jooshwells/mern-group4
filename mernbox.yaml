@@ -1,0 +1,36 @@
+services:
+  frontend:
+    image: node:20-alpine
+    working_dir: /frontend
+    command: sh -c "tail -f /dev/null"
+    ports:
+      - "127.0.0.1:80:5173"
+    volumes:
+      - ./frontend:/frontend:cached
+
+  backend:
+    image: node:20-alpine
+    working_dir: /backend
+    command: sh -c "tail -f /dev/null"
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./backend:/backend:cached
+
+  mongo:
+    image: mongo:8-noble
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password 
+
+
+# docker compose -f mernbox.yaml up -d
+# docker compose -f mernbox.yaml exec frontend sh
+# docker compose -f mernbox.yaml exec backend sh
