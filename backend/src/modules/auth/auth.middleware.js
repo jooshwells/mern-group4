@@ -7,7 +7,7 @@ import jsonwebtoken from "jsonwebtoken";
 
 export const rate_limit = rateLimit({
     windowMs: 60 * 1000,
-    max: 5,
+    max: 20,
     standardHeaders: true,
     legacyHeaders: false,
     message: {
@@ -63,7 +63,7 @@ export const validate_registration = [
         confirm_password: {
             custom: { 
                 options: (value, {req}) => {
-                    if (value !== req.body.confirm_password)
+                    if (value !== req.body.password)
                         throw new Error("Passwords do not match");
 
                     return true;
