@@ -1,6 +1,7 @@
 import { auth_routes } from "./modules/auth/index.js";
 import connect_database from "./config/database.js";
 import { normalize_response, normalize_system_error_response, normalize_response_404 } from "./custom.middleware.js";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -9,6 +10,8 @@ import helmet from "helmet";
 import express from "express";
 const app = express()
 const port = process.env.PORT || 8080;
+
+app.use(cookieParser());
 
 app.use(normalize_response);
 
