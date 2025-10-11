@@ -18,12 +18,12 @@ export const normalize_response = (request, response, next) => {
     next();
 }
 
-export const normalize_system_error_response = (error, request, response, next) => {
+export const normalize_system_error_response = (error, response) => {
     console.error("System error", error.stack || error);
 
     const status = error.status || error.statusCode || 500;
 
-    response.status(status).json({
+    return response.status(status).json({
         success: false,
         message: "Internal server error. Please try again later."
     })
@@ -31,7 +31,7 @@ export const normalize_system_error_response = (error, request, response, next) 
 }
 
 export const normalize_response_404 = (request, response, next) => {
-    response.status(404).json({
+    return response.status(404).json({
         success: false,
         message: "Not Found"
     })
