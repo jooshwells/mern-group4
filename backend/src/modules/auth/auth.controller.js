@@ -4,24 +4,16 @@ import jsonwebtoken from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import Handlebars from "handlebars";
 import fs from "fs";
+import bcrypt from "bcryptjs";
 
-// export const register_user = async (request, response, next) => {
-//     try {
-//         const { first_name, last_name, email, password } = request.body;
-//         const user = new User({ first_name, last_name, email, password });
-//         await user.save();
-//         return response.success({ user: { first_name, last_name, email } }, "User registered!", 201);
-//     }
-//     catch (error)
-//     {
-//         return normalize_system_error_response(error);
-//     }
-// }
 
 export const register_user = async (request, response, next) => {
     try {
         const { first_name, last_name, email, password } = request.body;
-        const user = new User({ first_name, last_name, email, password });
+
+        const hashed_password = await bcrypt.hash(password, 10);
+
+        const user = new User({ first_name, last_name, email, password: hashed_password });
         await user.save();
 
         request.user = {email: user.email};
