@@ -116,8 +116,8 @@ export const validate_log_in = [
             custom: {
                 options: async (value, {req}) => {
                     const user = await User.findOne({ email: req.body.email });
-
-                    if (value !== user.password)
+                    
+                    if (!(await bcrypt.compare(value, user.password)))
                         throw new Error("Invalid credentials");
 
                     return true;
