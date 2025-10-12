@@ -156,3 +156,34 @@ export const validate_token = (request, response, next) => {
         return response.error({}, "Invalid or expired token", 401); 
     }
 }
+
+export const validate_verification_token = async (request, response, next) => {
+    try {
+        const verification_token = request.params.verification_token;
+
+        if(!verification_token)
+            throw new Error("Missing token");
+
+        const decoded_verification_token = jsonwebtoken.verify(verification_token, process.env.JWT_SECRET);
+
+        if (decoded_verification_token.type !== "email_verification")
+            throw new Error("Invalid token type");
+
+        const user = await User.findOne({ email: decoded_verification_token.email });
+
+        if (!user)
+            throw new Error("User not found");
+
+        if (user.is_verified) 
+            throw new Error("User already verified");
+
+        if (user.verification_token !== verification_token)
+            throw new Error("Invalid token");
+
+        request.user = user;
+        next();
+        
+    } catch (error) {
+        return response.error({}, error.message, 401); 
+    }
+}
