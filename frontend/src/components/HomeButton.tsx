@@ -1,24 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "./theme-provider";
+import { LogOut } from "lucide-react";
+import { Button } from "./ui/button";
 
 const HomeButton: React.FC<{ className?: string }> = ({ className = "" }) => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const apiRes = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (apiRes.ok) {
+        window.location.href = "/";
+      } else {
+        console.log("Error logging out");
+        window.location.href = "/";
+      }
+    } catch (error) {}
+  };
 
   return (
-    <Link to="/">
-      <img
-        src="/home.svg"
-        alt="Home"
-        className={`h-14 w-14 cursor-pointer transition hover:opacity-80 ${className}`}
-        style={{
-          filter:
-            theme === "dark"
-              ? "invert(1) brightness(1.2)"
-              : "invert(0) brightness(1)",  
-        }}
-      />
-    </Link>
+    <Button onClick={handleLogout} variant="ghost">
+      <LogOut className="scale-200" />
+    </Button>
   );
 };
 
