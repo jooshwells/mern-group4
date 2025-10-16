@@ -5,7 +5,7 @@ import './index.css'
 import AppRoutes from './Routes'
 import { ThemeProvider } from './components/theme-provider.tsx'
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
     <BrowserRouter>
