@@ -14,7 +14,7 @@ function DarkMode() {
   const { setTheme } = useTheme();
 
   return (
-    <div className="absolute right-12 top-12">
+    <div className="absolute right-1 top-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">

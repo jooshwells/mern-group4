@@ -5,7 +5,9 @@ import { SignupForm } from "./components/signup-form";
 import { useTheme } from "./components/theme-provider";
 import { Textarea } from "@/components/ui/textarea";
 import MenuSearch from "./components/MenuSearch";
-import { UserRound } from "lucide-react";
+import DarkMode from "./components/ui/DarkMode";
+import { UserRound, Hourglass } from "lucide-react";
+import TimerButton from "./components/timerbutton";
 
 import {
   SidebarProvider,
@@ -18,8 +20,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-import { Button } from "./components/ui/button";
 
 import {
   NavigationMenu,
@@ -72,11 +72,14 @@ function App() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+          <DarkMode />
         </div>
       </div>
 
       <div className="h-screen mt-5 w-full flex flex-row relative justify-center">
-        <MenuSearch></MenuSearch>
+        <MenuSearch>
+          <TimerButton />
+        </MenuSearch>
         <MainEditor></MainEditor>
       </div>
     </div>
