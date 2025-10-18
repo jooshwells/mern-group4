@@ -5,7 +5,8 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs"
+} from "./components/ui/tabs"
+
 import { LoginForm } from './components/login-form'
 import { SignupForm } from './components/signup-form'
 import { useTheme } from './components/theme-provider'
