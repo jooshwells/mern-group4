@@ -1,4 +1,4 @@
-import { normalize_system_error_response } from "../../custom.middleware.js";
+import { normalize_system_error_response } from "../../../custom.middleware.js";
 import User from "./auth.model.js";
 import jsonwebtoken from "jsonwebtoken";
 import nodemailer from "nodemailer";

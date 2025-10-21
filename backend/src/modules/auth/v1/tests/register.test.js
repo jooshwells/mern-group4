@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import mongoose from 'mongoose';
 import { describe, it, beforeAll, afterAll, afterEach, expect } from 'vitest';
-import { normalize_response, normalize_system_error_response, normalize_response_404 } from '../../../custom.middleware.js';
+import { normalize_response, normalize_system_error_response, normalize_response_404 } from '../../../../custom.middleware.js';
 
 import { rate_limit, validate_registration } from '../auth.middleware.js';
 import { register_user } from '../auth.controller.js';
