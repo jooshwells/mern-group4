@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+// add back ...props if ends up being needed
+export function SignupForm({  }: React.ComponentProps<typeof Card>) {
   return (
     
     <Card>
