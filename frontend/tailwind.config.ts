@@ -4,6 +4,7 @@ import type { Config } from 'tailwindcss'
 // This lets classes like `bg-primary` and `text-primary-foreground` output
 // `background-color: var(--primary)` etc., which works with OKLCH values.
 const config: Config = {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {

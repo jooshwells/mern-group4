@@ -33,19 +33,21 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement
 
-    root.classList.remove("light", "dark")
+    // only toggle the 'dark' class; don't add a separate 'light' class
+    const applyTheme = (t: Theme) => {
+      const isDark =
+        t === "dark" ||
+        (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light"
-
-      root.classList.add(systemTheme)
-      return
+      root.classList.toggle("dark", isDark)
     }
 
-    root.classList.add(theme)
+    applyTheme(theme)
+
+    const mql = window.matchMedia("(prefers-color-scheme: dark)")
+    const onChange = () => applyTheme(theme)
+    mql.addEventListener?.("change", onChange)
+    return () => mql.removeEventListener?.("change", onChange)
   }, [theme])
 
   const value = {
@@ -58,6 +60,7 @@ export function ThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
+      {/* removed hard-coded color wrapper so CSS variables and body styles control color */}
       {children}
     </ThemeProviderContext.Provider>
   )
