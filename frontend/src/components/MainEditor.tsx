@@ -12,7 +12,6 @@ function MainEditor() {
   }
   function writeNotes(num: number) {
     if (notes.current && notes.current === document.activeElement) {
-      notes.current.style.border = "blue";
       notes.current.style.border = "none";
 
       //Set auto margins
@@ -20,7 +19,7 @@ function MainEditor() {
       notes.current.style.paddingRight = "5%";
 
       if (notes.current.value.trim() !== "") {
-        notes.current.style.paddingTop = "10%";
+        notes.current.style.paddingTop = "8%";
       }
       notes.current.placeholder = "";
       if (num == 1) {
@@ -37,7 +36,7 @@ function MainEditor() {
       <div className="absolute mt-5 border border-amber-300 text-center rounded-lg w-1/2">
         <input
           placeholder={noteTitle}
-          className="noteName text-current text-center w-[100%] placeholder-current"
+          className="noteName text-current text-center w-[100%] h-15 text-lg placeholder-current"
         ></input>
       </div>
       <div className="actualNotes w-full h-full items-center justify-center">
@@ -46,7 +45,7 @@ function MainEditor() {
           onInput={() => writeNotes(0)}
           onBlur={() => writeNotes(1)}
           placeholder="Start typing..."
-          className="h-[100%] w-[100%] text-current placeholder:text-center placeholder-current placeholder:py-75 focus-visible:ring-0 align-top"
+          className="h-full w-full pt-[8%] pl-[5%] pr-[5%] text-current placeholder:text-center placeholder-current focus-visible:ring-0 resize-none"
         ></Textarea>
       </div>
     </div>
