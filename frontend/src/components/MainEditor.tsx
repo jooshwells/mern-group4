@@ -37,7 +37,7 @@ function MainEditor() {
       <div className="absolute mt-5 border border-amber-300 text-center rounded-lg w-1/2">
         <input
           placeholder={noteTitle}
-          className="noteName text-center w-[100%] placeholder-black"
+          className="noteName text-current text-center w-[100%] placeholder-current"
         ></input>
       </div>
       <div className="actualNotes w-full h-full items-center justify-center">
@@ -46,7 +46,7 @@ function MainEditor() {
           onInput={() => writeNotes(0)}
           onBlur={() => writeNotes(1)}
           placeholder="Start typing..."
-          className="h-[100%] w-[100%] placeholder:text-center placeholder-black placeholder:py-75 focus-visible:ring-0 align-top"
+          className="h-[100%] w-[100%] text-current placeholder:text-center placeholder-current placeholder:py-75 focus-visible:ring-0 align-top"
         ></Textarea>
       </div>
     </div>
