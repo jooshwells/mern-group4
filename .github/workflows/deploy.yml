@@ -1,0 +1,73 @@
+name: Deploy MERN App
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set Up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build #
+        env:
+          CI: false
+      
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm install --omit=dev
+      
+      - name: Deploy files via rsync
+        uses: easingthemes/ssh-deploy@v5.0.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
+          SOURCE: "./" 
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
+          TARGET: /var/www/nanta-app/
+          EXCLUDE: "/frontend/node_modules/, /backend/node_modules/, /frontend/.env, /backend/.env, /.git/, /.github/"
+      
+      - name: SSH and Run Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Creating backend .env file..."
+            cd /var/www/nanta-app/backend
+            echo "NODE_ENV=production" > .env
+            echo "PORT=${{ secrets.PORT || 8080 }}" >> .env #
+            echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env #
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env #
+            echo "APP_DOMAIN=${{ secrets.APP_DOMAIN }}" >> .env #
+            # Add MAIL_* secrets
+            echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
+            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
+            echo "MAIL_USER=${{ secrets.MAIL_USER }}" >> .env
+            echo "MAIL_PASS=${{ secrets.MAIL_PASS }}" >> .env
+            echo "MAIL_FROM=${{ secrets.MAIL_FROM }}" >> .env
+            echo "MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}" >> .env
+            echo ".env file created."
+
+            echo "Installing backend dependencies on server..."
+            npm install --omit=dev --prefix /var/www/nanta-app/backend
+
+            echo "Restarting application with PM2..."
+            pm2 restart nanta-server --update-env || pm2 start /var/www/nanta-app/backend/src/server.js --name nanta-server --update-env
+            pm2 save # Save the process list
+            echo "Deployment complete!"
