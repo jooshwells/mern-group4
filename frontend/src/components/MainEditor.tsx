@@ -1,35 +1,31 @@
 //
 import { useState, useRef } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import ReactQuill, { Quill, type DeltaStatic } from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { Delta } from "quill";
+import type Editor from "quill/core/editor";
+
 function MainEditor() {
   const [noteTitle, renameNoteTitle] = useState("Untitled Document");
-  const notes = useRef<HTMLTextAreaElement>(null);
+  const [value, setValue] = useState<any>({ ops: [] });
 
   function renameNote() {
     let noteName = document.querySelector(".noteName") as HTMLInputElement;
     if ((noteName.value = "")) return;
     renameNoteTitle(noteName.value);
   }
-  function writeNotes(num: number) {
-    if (notes.current && notes.current === document.activeElement) {
-      notes.current.style.border = "none";
+  const handleChange = (
+    content: string,
+    delta: any,
+    source: string,
+    editor: any
+  ) => {
+    // Get Delta format from editor
 
-      //Set auto margins
-      notes.current.style.paddingLeft = "5%";
-      notes.current.style.paddingRight = "5%";
+    setValue(editor.getContents());
 
-      if (notes.current.value.trim() !== "") {
-        notes.current.style.paddingTop = "8%";
-      }
-      notes.current.placeholder = "";
-      if (num == 1) {
-        notes.current.style.paddingTop = "1%";
-        notes.current.style.paddingLeft = "1%";
-
-        notes.current.placeholder = "Start typing...";
-      }
-    }
-  }
+    console.log();
+  };
 
   return (
     <div className="ml-5 flex-1 h-[85%] relative border border-amber-400 flex flex-col items-center rounded-lg ">
@@ -40,13 +36,12 @@ function MainEditor() {
         ></input>
       </div>
       <div className="actualNotes w-full h-full items-center justify-center">
-        <Textarea
-          ref={notes}
-          onInput={() => writeNotes(0)}
-          onBlur={() => writeNotes(1)}
-          placeholder="Start typing..."
-          className="h-full w-full pt-[8%] pl-[5%] pr-[5%] text-current placeholder:text-center placeholder-current focus-visible:ring-0 resize-none"
-        ></Textarea>
+        <ReactQuill
+          value={value}
+          onChange={setValue}
+          className="h-[90%] w-full" // ReactQuill has its own styling
+          theme="snow"
+        />
       </div>
     </div>
   );
