@@ -1,5 +1,5 @@
 import express from "express";
-import { validate_session_token } from "../auth/auth.middleware.js";
+import { validate_session_token } from "../auth/v2/auth.middleware.js";
 import {create_note, get_notes, update_note, delete_note} from "./notes.controller.js";
 
 const router = express.Router();
