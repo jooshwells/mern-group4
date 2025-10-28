@@ -6,9 +6,8 @@ export const create_note = async (request, response) => {
     try {
         const { title, content } = request.body;
         const user_id = request.user && (request.user.id || request.user._id);
-
         if (!user_id) {
-            return response.error({}, "User not authenticated", 401);
+            return response.status(401).json({ message: "User not authenticated" });
         }
 
         // Uses default "Blank Note" if undefined
@@ -16,9 +15,9 @@ export const create_note = async (request, response) => {
 
         await note.save();
 
-        return response.success({ note }, "Note saved successfully!", 201);
+        return response.status(200).send("Note created successfully!");
     } catch (error) {
-        return normalize_system_error_response(error, response);
+       return normalize_system_error_response(error, response);
     }
 };
 
@@ -28,12 +27,12 @@ export const get_notes = async (request, response) => {
         const user_id = request.user && (request.user.id || request.user._id);
 
         if (!user_id) {
-            return response.error({}, "User not authenticated", 401);
+            return response.status(401).json({ message: "User not authenticated" });
         }
 
         const notes = await Note.find({ user: user_id }).sort({ updated_at: -1 });
 
-        return response.success({ notes }, "Notes retrieved successfully!", 200);
+        return response.status(200).json({ notes, message: "Notes retrieved successfully!" });
     } catch (error) {
         return normalize_system_error_response(error, response);
     }
@@ -53,10 +52,10 @@ export const update_note = async (request, response) => {
         );
 
         if (!note) {
-            return response.error({}, "Note not found or unauthorized", 404);
+            return response.status(404).json({ message: "Note not found or unauthorized!" });
         }
 
-        return response.success({ note }, "Note updated successfully!", 200);
+        return response.status(200).json({ message: "Note updated successfully!" });
     } catch (error) {
         return normalize_system_error_response(error, response);
     }
@@ -71,10 +70,10 @@ export const delete_note = async (request, response) => {
         const note = await Note.findOneAndDelete({ _id: id, user: user_id });
 
         if (!note) {
-            return response.error({}, "Note not found or unauthorized", 404);
+            return response.status(404).json({ message: "Note not found or unauthorized!" });
         }
 
-        return response.success({}, "Note deleted successfully!", 200);
+        return response.status(200).json({ message: "Note deleted successfully!" });
     } catch (error) {
         return normalize_system_error_response(error, response);
     }
