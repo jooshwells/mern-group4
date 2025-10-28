@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const note_schema = new mongoose.Schema(
     {
-        tite: {type: String, required: True, trim: True, default: "Blank Note"},
-        content: {type: String, required: True},
-        user: {type: mongoose.Schema.Types.ObjectID, ref: "User", required: True}
+        title: {type: String, required: true, trim: true, default: "Blank Note"},
+        content: {type: String, required: true},
+        user: {type: mongoose.Schema.Types.ObjectID, ref: "User", required: true}
     }
 );
 
