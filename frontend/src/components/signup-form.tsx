@@ -36,7 +36,7 @@ export function SignupForm({  }: React.ComponentProps<typeof Card>) {
       console.log(res);
   
       if (res.ok) {
-          navigate("/login");
+          navigate("/profile");
       }
     } catch (err) {
       console.error("Server error. Please try again later")
@@ -47,12 +47,8 @@ export function SignupForm({  }: React.ComponentProps<typeof Card>) {
 
   return (
     <>
-    <div className="text-center pb-6">
-        <h1 className="font-bold text-5xl">NANTA</h1>
-        <p><span className="hidden">Oh, God, please!</span>not another note taking app</p>
-      </div>
     <Card>
-      <CardHeader className="text-center">
+      <CardHeader className="text">
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
           Enter your information below to create your account
@@ -64,7 +60,7 @@ export function SignupForm({  }: React.ComponentProps<typeof Card>) {
           <div className="flex flex-row space-x-2">
               <Field>
                 <FieldLabel htmlFor="firstname">First Name</FieldLabel>
-                <Input name="first_name" id="first_name" type="text" placeholder="First" required />
+                <Input name="first_name" id="first_name" type="text" placeholder="John" required />
               </Field>
               <Field>
                 <FieldLabel htmlFor="lastname">Last Name</FieldLabel>

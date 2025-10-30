@@ -38,7 +38,7 @@ export function LoginForm({
       console.log(res);
 
       if (res.ok) {
-          navigate("/notebook");
+          navigate("/profile");
       }
     } catch (err) {
       console.error("Server error. Please try again later")
@@ -48,12 +48,8 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="text-center">
-        <h1 className="font-bold text-5xl">NANTA</h1>
-        <p><span className="hidden">Oh, God, please!</span>not another note taking app</p>
-      </div>
       <Card>
-        <CardHeader className="text-center">
+        <CardHeader className="text">
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
             Enter your email below to login to your account
