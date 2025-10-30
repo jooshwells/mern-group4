@@ -15,7 +15,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { useNavigate } from "react-router-dom"
 
-export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+// add back ...props if ends up being needed
+export function SignupForm({  }: React.ComponentProps<typeof Card>) {
   const navigate = useNavigate()
 
   const handle_submit = async (e: React.FormEvent<HTMLFormElement>) => {
