@@ -12,5 +12,5 @@ createRoot(document.getElementById("root")!).render(
       <AppRoutes/>
     </BrowserRouter>
     </ThemeProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

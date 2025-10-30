@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -35,17 +36,18 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.623 0.214 259.815);
+  scrollbar-color: var(--muted-foreground) var(--sidebar-accent);
 }
 
 .dark {
-  --background: oklch(16.338% 0.03984 265.078);
+  --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(55% 0.18 259);
-  --primary-foreground: oklch(100% 0.00011 271.152);
+  --primary: oklch(0.488 0.243 264.376);
+  --primary-foreground: oklch(0.97 0.014 254.604);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
@@ -55,23 +57,26 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.809 0.105 251.813);
+  --chart-2: oklch(0.623 0.214 259.815);
+  --chart-3: oklch(0.546 0.245 262.881);
+  --chart-4: oklch(0.488 0.243 264.376);
+  --chart-5: oklch(0.424 0.199 265.638);
   --sidebar: oklch(0.21 0.006 285.885);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.546 0.245 262.881);
-  --sidebar-primary-foreground: oklch(0.379 0.146 265.522);
+  --sidebar-primary: oklch(0.623 0.214 259.815);
+  --sidebar-primary-foreground: oklch(0.97 0.014 254.604);
   --sidebar-accent: oklch(0.274 0.006 286.033);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --sidebar-ring: oklch(0.439 0 0);
+  scrollbar-color: var(--muted-foreground) var(--sidebar-accent);
+  /* overflow: hidden; */
 }
 
 @theme inline {
+  --scollbar-color: var(--color-background) var(--color-sidebar-accent);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -192,25 +197,35 @@
   }
 }
 
-.ql-editor {
-  padding-top: 8% !important;
-  padding-left: 5% !important;
-  padding-right: 5% !important;
-  color: #111827 !important;
-}
-
-.ql-toolbar.ql-snow {
+.ql-container {
+  flex: 1;
   display: flex;
-  top: 10%;
-  justify-content: center;
-  align-items: center;
-
-  border: none !important;
+  flex-direction: column;
+  height: 10px;
+  border-left: 0px;
+  padding-bottom: 16px;
+  background-color: var(--accent);
 }
+
+.ql-editor {
+  flex: 1;
+  flex-grow: 1;
+  height: 100%;
+  padding-bottom: 2rem;
+  background-color: var(--accent);
+  border: 0px solid white;
+  border-left: 0px;
+  position: absolute;
+  top: 16px;
+  z-index: 0;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
 .ql-toolbar {
-  position: relative;
-  padding: 0;
-  margin-top: 3%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+
+  border-bottom: 1px solid #e5e7eb;
 }
