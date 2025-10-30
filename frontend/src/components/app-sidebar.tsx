@@ -1,10 +1,11 @@
-import * as React from "react"
+import * as React from "react";
 
-import { SearchForm } from "@/components/search-form"
-import { VersionSwitcher } from "@/components/version-switcher"
+import { SearchForm } from "@/components/search-form";
+import { VersionSwitcher } from "@/components/version-switcher";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -13,7 +14,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { CircleUserRound, Plus, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
 
 // This is sample data.
 const data = {
@@ -145,29 +161,154 @@ const data = {
       ],
     },
   ],
-}
+};
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type propType = {
+  noteContent: any;
+  noteId: string;
+  setNoteContent: (a: any) => void;
+  setNoteId: (a: string) => void;
+  setNoteTitle: (a: string) => void;
+  handleSave: () => void;
+};
+
+export function AppSidebar({
+  noteContent,
+  noteId,
+  setNoteContent,
+  setNoteId,
+  setNoteTitle,
+  handleSave,
+  ...props
+}: propType) {
+  // React.ComponentProps<typeof Sidebar>) {
+  const [noteData, setNoteData] = useState({
+    navMain: [
+      {
+        title: "Notes",
+        _id: "#",
+        notes: [{ title: "No notes created", _id: "#", content: "{}" }],
+      },
+    ],
+  });
+
+  const createNote = async (title: string) => {
+    await fetch("/api/notes/create", {
+      method: "POST",
+      body: JSON.stringify({
+        title: title,
+        content: JSON.stringify({
+          ops: [],
+        }),
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+  };
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = () => {
+    fetch("/api/notes/")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.notes.length != 0) {
+          setNoteData({
+            navMain: [
+              {
+                title: "Notes",
+                _id: "#",
+                notes: data.notes,
+              },
+            ],
+          });
+        } else {
+          setNoteData({
+            navMain: [
+              {
+                title: "Notes",
+                _id: "#",
+                notes: [{ title: "No notes created", _id: "#", content: "{}" }],
+              },
+            ],
+          });
+        }
+      });
+  };
+
+  const handleCreateNote = async (e: any) => {
+    console.log("Created new note");
+    e.preventDefault();
+    await createNote(e.target.title.value);
+    await fetchNotes();
+  };
+
+  const handleOpenNote = (id: string, content: string, title: string) => {
+    setNoteId(id);
+    console.log(id);
+    setNoteTitle(title);
+    setNoteContent(JSON.parse(content));
+    fetchNotes();
+  };
+
+  const handleDeleteNote = async (id: string) => {
+    await fetch(`/api/notes/${id}`, {
+      method: "DELETE",
+    });
+    if (noteId == id) {
+      setNoteId("");
+    }
+    fetchNotes();
+  };
+
+  const handleSaveButton = async () => {
+    await handleSave();
+  };
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher
+        {/* <VersionSwitcher
           versions={data.versions}
           defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
+        /> */}
+        {/* <SearchForm /> */}
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {noteData.navMain.map((item) => (
           <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+            <SidebarGroupLabel className="justify-center mb-1 border-b text-lg">
+              {item.title}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {item.notes.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                    <SidebarMenuButton asChild>
+                      <div
+                        className={`${noteId == item._id && "bg-border"} mb-1`}
+                      >
+                        <a
+                          onClick={() =>
+                            handleOpenNote(item._id, item.content, item.title)
+                          }
+                          href={"#"}
+                          className="grow"
+                        >
+                          {item.title}
+                        </a>
+                        {/* <div className="grow"></div> */}
+                        <div
+                          onClick={() => handleDeleteNote(item._id)}
+                          className="rounded-[100%] hover:bg-sidebar-ring p-1"
+                        >
+                          <Trash2 />
+                        </div>
+                      </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -176,7 +317,48 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <Plus /> New Note
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <form onSubmit={handleCreateNote}>
+              <DialogHeader>
+                <DialogTitle>Create new note</DialogTitle>
+                <DialogDescription>
+                  Choose the title of your note. This cannot be changed later.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4">
+                <div className="grid gap-3">
+                  <Label htmlFor="title">Title</Label>
+                  <Input id="title" name="title" defaultValue="Note Title" />
+                </div>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button className="m-1" type="submit">
+                    Save changes
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+        <Button onClick={handleSaveButton}>Save (Ctrl+S)</Button>
+        <a className="m-auto" href="/profile">
+          {/* <Button> */}
+          <CircleUserRound
+            className="rounded-xs hover:bg-sidebar-border"
+            size={56}
+          />
+          {/* </Button> */}
+        </a>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

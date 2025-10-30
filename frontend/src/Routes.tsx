@@ -4,6 +4,7 @@ import App from "./App";           // homepage
 import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
 import ProfilePage from "./ProfilePage";
+import { NoteEditorPage } from "./pages/NoteEditorPage";
 
 const AppRoutes: React.FC = () => (
   <Routes>
@@ -11,6 +12,7 @@ const AppRoutes: React.FC = () => (
     <Route path="/login" element={<LoginPage />} />
     <Route path="/signup" element={<SignupPage />} />
     <Route path="/profile" element={<ProfilePage />} />
+    <Route path="/edit" element={<NoteEditorPage />} />
 
   </Routes>
 );
