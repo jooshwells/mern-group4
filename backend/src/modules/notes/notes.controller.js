@@ -32,9 +32,9 @@ export const get_notes = async (request, response) => {
 
         const notes = await Note.find({ user: user_id }).sort({ updated_at: -1 });
 
-        return response.success({ notes }, "Notes retrieved successfully!", 200);
+        return response.status(200).json({ notes, message: "Notes retrieved successfully!" });
     } catch (error) {
-        
+        return normalize_system_error_response(error, response);
     }
 };
 
