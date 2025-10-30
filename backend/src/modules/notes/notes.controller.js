@@ -6,9 +6,8 @@ export const create_note = async (request, response) => {
     try {
         const { title, content } = request.body;
         const user_id = request.user && (request.user.id || request.user._id);
-
         if (!user_id) {
-            return response.error({}, "User not authenticated", 401);
+            return response.status(401).json({ message: "User not authenticated" });
         }
 
         // Uses default "Blank Note" if undefined
@@ -16,9 +15,9 @@ export const create_note = async (request, response) => {
 
         await note.save();
 
-        return response.success({ note }, "Note saved successfully!", 201);
+        return response.status(200).send("Note created successfully!");
     } catch (error) {
-        return normalize_system_error_response(error, response);
+       return normalize_system_error_response(error, response);
     }
 };
 
@@ -35,7 +34,7 @@ export const get_notes = async (request, response) => {
 
         return response.success({ notes }, "Notes retrieved successfully!", 200);
     } catch (error) {
-        return normalize_system_error_response(error, response);
+        
     }
 };
 
@@ -58,7 +57,7 @@ export const update_note = async (request, response) => {
 
         return response.success({ note }, "Note updated successfully!", 200);
     } catch (error) {
-        return normalize_system_error_response(error, response);
+        
     }
 };
 
@@ -76,6 +75,6 @@ export const delete_note = async (request, response) => {
 
         return response.success({}, "Note deleted successfully!", 200);
     } catch (error) {
-        return normalize_system_error_response(error, response);
+        
     }
 };

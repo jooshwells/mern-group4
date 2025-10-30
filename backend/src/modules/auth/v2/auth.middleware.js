@@ -170,7 +170,7 @@ export const validate_session_token = async (req, res, next) => {
         if(!user)
             return res.status(400).send({ authorization_status: "Unauthorized" });
 
-        req.body = { user };
+        req.user = user;
 
         next();
     } catch (err) {
