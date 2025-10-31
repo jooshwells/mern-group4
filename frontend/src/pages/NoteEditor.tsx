@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
+import { Timer } from "@/components/timer";
 
 export function NoteEditor() {
   const { setTheme } = useTheme();
@@ -54,7 +55,7 @@ export function NoteEditor() {
       <SidebarProvider className="">
         <AppSidebar />
         <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <header className="flex flex-row h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
@@ -73,10 +74,12 @@ export function NoteEditor() {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <div className="mx-auto overflow-hidden">
+              <Timer />
+            </div>
           </header>
-          <div className="">
-            <TextEditor />
-          </div>
+
+          <TextEditor />
         </SidebarInset>
       </SidebarProvider>
     </div>
