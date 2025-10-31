@@ -24,7 +24,7 @@ export function TextEditor({ ...props }) {
     <div className=" sticky">
       <style>{`.ql-toolbar.ql-snow{ border: 1px solid var(--color-border),
       ;
-      border-top: 0px solid white;}
+      border-top: 0px solid white; z-index: 1;}
       .ql-container.ql-snow{border: 1px solid var(--color-border);}`}</style>
       <ReactQuill
         className="l"

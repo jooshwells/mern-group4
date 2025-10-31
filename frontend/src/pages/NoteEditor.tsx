@@ -24,13 +24,17 @@ import { Button } from "@/components/ui/button";
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import { Timer } from "@/components/timer";
+import Draggable from "react-draggable";
+import { useRef } from "react";
 
 export function NoteEditor() {
   const { setTheme } = useTheme();
 
+  const nodeRef = useRef(null);
+
   return (
     <div>
-      <div className="absolute right-4 z-10 top-4">
+      <div className="absolute right-4 z-50 top-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
@@ -54,6 +58,7 @@ export function NoteEditor() {
       </div>
       <SidebarProvider className="">
         <AppSidebar />
+
         <SidebarInset>
           <header className="flex flex-row h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
@@ -74,11 +79,16 @@ export function NoteEditor() {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
-            <div className="mx-auto overflow-hidden">
+          </header>
+          {/* Remove the handle prop so that you can click anywhere on the  */}
+          <Draggable handle=".handle" nodeRef={nodeRef}>
+            <div
+              ref={nodeRef}
+              className="absolute z-50 right-20 mx-auto overflow-hidden"
+            >
               <Timer />
             </div>
-          </header>
-
+          </Draggable>
           <TextEditor />
         </SidebarInset>
       </SidebarProvider>
