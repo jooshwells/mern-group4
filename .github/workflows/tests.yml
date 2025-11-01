@@ -1,0 +1,46 @@
+name: Tests
+
+# ---
+# Triggers
+# ---
+# This workflow runs on:
+# 1. Any pull request that targets the 'master' branch.
+on:
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js (e.g., version 20.x)
+      - name: Set Up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # 3. Install backend dependencies
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm install
+        env:
+          NODE_ENV: dev
+
+      # 4. Run tests
+      - name: Run Vitest tests
+        run: |
+          cd backend
+          npm run test src/modules/auth/v2/tests/authenticate.test.js
+          npm run test src/modules/auth/v2/tests/login.test.js
+          npm run test src/modules/auth/v2/tests/register.test.js
+          # npm run test src/modules/auth/v2/tests/send-verification-email.test.js
+          npm run test src/modules/auth/v2/tests/verify-email.test.js
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          NODE_ENV: production
