@@ -2,7 +2,11 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import TimerButton from "./timerbutton";
 
-export default function MenuSearch({ children }: { children?: React.ReactNode }) {
+export default function MenuSearch({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <div className="h-[85%] relative flex border border-amber-300 w-[240px] rounded-lg justify-center items-start pt-2 bg-background">
       <form className="flex w-full justify-center">
