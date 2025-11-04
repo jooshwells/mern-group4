@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import ejs from "ejs";
 import fs from "fs";
+import { normalize_system_error_response } from "../../../custom.middleware.js";
 
 /**
  * @Precondition
@@ -88,8 +89,10 @@ export const logout_user = (req, res) => {
 export const get_user_data = (req, res) => {
     try {
         const { user } = req.body; 
+
+        return res.status(200).send({user, message: "User retrieved successfully!"});
     } catch (error) {
-        
+        return normalize_system_error_response(error, response);
     }
 }
 
