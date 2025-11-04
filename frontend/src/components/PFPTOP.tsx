@@ -50,7 +50,7 @@ function Pfptop() {
             <img
               src={selectedPic}
               alt="Profile"
-              className="h-full w-full rounded-full object-cover border-4 border-amber-600 shadow-lg"
+              className="h-full w-full rounded-full object-cover border-4 shadow-lg --border: 214.3 31.8% 91.4%; border-color: hsl(var(--border)); "
             />
           )}
 
@@ -99,8 +99,7 @@ function Pfptop() {
         </div>
         <p className="text-2xl text-gray-500 dark:text-gray-300">{eMail}</p>
       </div>
-
-      </div>
+    </div>
   );
 }
 

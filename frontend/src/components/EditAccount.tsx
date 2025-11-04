@@ -2,6 +2,20 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { FileCheck } from "lucide-react";
 
+import { Label } from "@/components/ui/label";
+
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Input } from "@/components/ui/input";
+
 interface EditAccountProps {
   className?: string;
 }
@@ -9,81 +23,66 @@ interface EditAccountProps {
 function EditAccount({ className }: EditAccountProps) {
   const [hide, setVisible] = useState(false);
 
-  const editPW = () => {
+  const showPWEdit = () => {
     setVisible((prev) => !prev);
   };
 
   return (
-    <div className="justify-center w-full">
-      {/* Title */}
-      <p className="text-center font-bold text-4xl mb-5">Edit Account</p>
+    <div className="w-full">
+      <Card className="w-full flex justify-center">
+        <CardHeader>
+          <CardTitle className="flex justify-center">Edit Account</CardTitle>
+          <CardDescription className="flex justify-center">
+            Select any of the fields below to change your account information
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {/*Wrapper for card content */}
 
-      {/* Labels and Inputs */}
-      <div className="mt-10 flex flex-row text-lg">
-        {/* Labels */}
-        <div className="flex flex-col">
-          <p className="mb-7">First Name:</p>
-          <p className="mb-7">Last Name:</p>
-          <p>Email:</p>
-        </div>
-
-        {/* Inputs */}
-        <div className="flex flex-col ml-5">
-          <input
-            placeholder="First Name"
-            className="text-lg text-center border border-amber-200 rounded-2xl h-9 mb-4 px-2"
-          />
-          <input
-            placeholder="Last Name"
-            className="text-lg text-center border border-amber-200 rounded-2xl h-9 mb-5 px-2"
-          />
-          <input
-            placeholder="Email"
-            className="text-lg text-center border border-amber-200 rounded-2xl h-9 mb-5 px-2"
-          />
-        </div>
-      </div>
-
-      {/* Change Password Section */}
-      <div className="flex flex-col justify-center mt-5 text-lg">
-        <Button
-          className="mt-5 bg-black border border-amber-400 text-red-700 text-lg"
-          onClick={editPW}
-        >
-          Change Password
-        </Button>
-
-        <input
-          placeholder="Old Password"
-          className={`text-lg border border-amber-300 text-center mt-5 rounded-2xl h-9 px-2 ${
-            hide ? "block" : "hidden"
-          }`}
-        />
-        <input
-          placeholder="New Password"
-          className={`text-lg border border-amber-300 text-center mt-5 rounded-2xl h-9 px-2 ${
-            hide ? "block" : "hidden"
-          }`}
-        />
-        <input
-          placeholder="Confirm Password"
-          className={`text-lg border border-amber-300 text-center mt-5 rounded-2xl h-9 px-2 ${
-            hide ? "block" : "hidden"
-          }`}
-        />
-
-        <div className="flex justify-center mt-5">
-          <Button
-            className={`border-3 border-amber-300 rounded-2xl w-12 h-12 p-0 
-              bg-gray-200 dark:bg-blue-600 ${hide ? "block" : "hidden"}`}
-            onClick={() => setVisible(false)}
-          >
-            <div className="flex items-center justify-center w-full h-full">
-              <FileCheck size={32} />
+          <div className="">
+            <div className="flex flex-row">
+              {/*Labels*/}
+              <div className="flex flex-col gap-15 mt-3 mb-5">
+                <Label>First Name</Label>
+                <Label>Last Name</Label>
+                <Label>Email</Label>
+              </div>
+              {/*Input fields for editing*/}
+              <div className="flex flex-col gap-10 justify-center ml-5 mb-5">
+                <Input type="text" />
+                <Input type="text" />
+                <Input type="email" />
+              </div>
             </div>
-          </Button>
-        </div>
-      </div>
+            {/*Password Edit Section*/}
+            <div className="flex flex-col justify-center gap-5">
+              <Button onClick={showPWEdit} className="mb-5 mt-5">
+                Change Password
+              </Button>
+              <Input
+                type="password"
+                placeholder="Old Password"
+                className={`${hide ? "block" : "hidden"} text-center`}
+              />
+              <Input
+                type="password"
+                placeholder="New Password"
+                className={`${hide ? "block" : "hidden"} text-center`}
+              />
+              <Input
+                type="password"
+                placeholder="Confirm New Password "
+                className={`${hide ? "block" : "hidden"} text-center mb-5`}
+              />
+              <Button
+                className={`${hide ? "block" : "hidden"} w-10 rounded-4xl`}
+              >
+                <FileCheck size={10} />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
