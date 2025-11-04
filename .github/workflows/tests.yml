@@ -42,5 +42,5 @@ jobs:
           npm run test src/modules/auth/v2/tests/verify-email.test.js
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          MONGO_URI: ${{ secrets.MONGO_URI }}
+          MONGO_URI: ${{ secrets.TESTING_MONGO_URI }}
           NODE_ENV: production
