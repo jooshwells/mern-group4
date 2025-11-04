@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "./theme-provider";
+import homeIcon from "../assets/home.png";
 
 const HomeButton: React.FC<{ className?: string }> = ({ className = "" }) => {
   const { theme } = useTheme();
