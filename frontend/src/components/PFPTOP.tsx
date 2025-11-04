@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useTheme } from "./theme-provider";
-import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 import { PencilLine } from "lucide-react";
-import homeIcon from "../assets/home.png";
+import { useTheme } from "./theme-provider";
 
-// Automatically import all JPGs in the assets folder
+// Automatically import all profile pictures
 const images = import.meta.glob("../assets/*.jpg", { eager: true, as: "url" });
 const profileOptions = Object.values(images);
 
-const Pfptop: React.FC = () => {
+function Pfptop() {
   const { theme } = useTheme();
 
-  const [selectedPic, setSelectedPic] = useState(profileOptions[0] || "");
   const [eMail, setEmail] = useState("Email");
   const [firstN, setFirstN] = useState("First Name");
   const [lastN, setLastN] = useState("Last Name");
   const [load, setLoad] = useState(true);
   const [showPicOptions, setShowPicOptions] = useState(false);
+  const [selectedPic, setSelectedPic] = useState(profileOptions[0]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,70 +39,69 @@ const Pfptop: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full relative text-center flex flex-col items-center">
-
-      {/* Profile Picture */}
-      <div className="flex justify-center relative mt-5">
-        {load ? (
-          <div className="h-[150px] w-[150px] rounded-full bg-gray-300 animate-pulse mb-5" />
-        ) : (
-          <img
-            src={selectedPic}
-            alt="Profile"
-            className="h-[150px] w-[150px] rounded-full object-cover border-4 border-amber-600 shadow-lg mb-5"
-          />
-        )}
-
-        {/* Edit Button */}
-        <Button
-          className="absolute top-[115px] right-[calc(50%-75px)] rounded-full bg-amber-600 hover:bg-amber-700 text-white p-2"
-          onClick={() => setShowPicOptions(!showPicOptions)}
-        >
-          <PencilLine size={18} />
-        </Button>
-      </div>
-
-      {/* Name */}
-      <div className="flex flex-row gap-3 justify-center font-medium">
-        <p>{firstN}</p>
-        <p>{lastN}</p>
-      </div>
-
-      {/* Email */}
-      <p className="text-sm text-gray-500">{eMail}</p>
-
-      {/* Profile Picture Options Grid */}
-      {showPicOptions && (
-        <div
-          className="absolute top-[170px] left-1/2 -translate-x-1/2
-                     grid grid-cols-5 gap-2 border-7 p-2 rounded shadow-lg z-50 max-w-[400px]"
-          style={{
-            backgroundColor:
-              theme === "dark"
-                ? "oklch(40% 0.05 265deg)"
-                : "#ffffff",
-            borderColor:
-              theme === "dark"
-                ? "oklch(28% 0.05 265deg)"
-                : "#cccccc",
-          }}
-        >
-          {profileOptions.map((pic, index) => (
+    <div className="flex flex-col w-full md:flex-row gap-10 items-start mt-10">
+      {/* Left Column: Profile Picture */}
+      <div className="flex flex-col items-center w-full md:w-1/2">
+        {/* Profile picture wrapper */}
+        <div className="relative w-[300px] h-[300px] ml-80">
+          {load ? (
+            <div className="h-full w-full rounded-full bg-gray-300 animate-pulse" />
+          ) : (
             <img
-              key={index}
-              src={pic}
-              alt={`Profile option ${index + 1}`}
-              className="h-12 w-12 rounded-full object-cover hover:ring-2 hover:ring-amber-600 cursor-pointer"
-              onClick={() => {
-                setSelectedPic(pic);
-                setShowPicOptions(false);
-              }}
+              src={selectedPic}
+              alt="Profile"
+              className="h-full w-full rounded-full object-cover border-4 border-amber-600 shadow-lg"
             />
-          ))}
+          )}
+
+          {/* Pencil/Edit Button */}
+          <div
+            className="absolute bottom-1 right-1 rounded-full bg-amber-600 hover:bg-amber-700 flex items-center justify-center cursor-pointer"
+            style={{ width: "76px", height: "76px" }}
+            onClick={() => setShowPicOptions(!showPicOptions)}
+          >
+            <PencilLine width={28} height={28} />
+          </div>
+
+          {/* Profile Selection Grid Overlay */}
+          {showPicOptions && (
+            <div
+              className="absolute top-full left-0 mt-2 grid grid-cols-5 gap-2 border-2 p-4 rounded shadow-lg z-50"
+              style={{
+                backgroundColor:
+                  theme === "dark" ? "oklch(40% 0.05 265deg)" : "#ffffff",
+                borderColor:
+                  theme === "dark" ? "oklch(28% 0.05 265deg)" : "#cccccc",
+              }}
+            >
+              {profileOptions.map((pic, index) => (
+                <img
+                  key={index}
+                  src={pic}
+                  alt={`Profile option ${index + 1}`}
+                  className="h-12 w-12 rounded-full object-cover hover:ring-2 hover:ring-amber-600 cursor-pointer"
+                  onClick={() => {
+                    setSelectedPic(pic);
+                    setShowPicOptions(false);
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* Right Column: Text Info */}
+      <div className="flex flex-col w-full md:w-1/2 justify-start items-start gap-4">
+        <div className="flex flex-col font-bold text-3xl gap-2.5">
+          <p>{firstN}</p>
+          <p>{lastN}</p>
+        </div>
+        <p className="text-2xl text-gray-500 dark:text-gray-300">{eMail}</p>
+      </div>
+
+      </div>
   );
-};
+}
 
 export default Pfptop;
