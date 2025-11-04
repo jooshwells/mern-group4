@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 // Route Imports
 import { auth_routes } from "./modules/auth/v2/auth.index.js";
 import { notes_routes } from "./modules/notes/notes.index.js";
+import { profile_routes } from "./modules/profile/profile.index.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", auth_routes);
 app.use("/api/notes", notes_routes);
+app.use("/api/profile", profile_routes);
 
 // 404 response
 app.use((req, res) => {
