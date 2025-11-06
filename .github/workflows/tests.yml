@@ -35,11 +35,16 @@ jobs:
       - name: Run Vitest tests
         run: |
           cd backend
+
           npm run test src/modules/auth/v2/tests/authenticate.test.js
           npm run test src/modules/auth/v2/tests/login.test.js
           npm run test src/modules/auth/v2/tests/register.test.js
           # npm run test src/modules/auth/v2/tests/send-verification-email.test.js
           npm run test src/modules/auth/v2/tests/verify-email.test.js
+
+          npm run test src/modules/profile/tests/update-profile.test.js
+
+
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           MONGO_URI: ${{ secrets.TESTING_MONGO_URI }}
