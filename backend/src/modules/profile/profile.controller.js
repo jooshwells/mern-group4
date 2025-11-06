@@ -24,23 +24,31 @@ export const update_profile = async (request, response) => {
             updateFields.password = await bcrypt.hash(password, 10);
         }
 
-        const updatedUser = await User.findByIdAndUpdate(
-            user_id,
-            { $set: updateFields },
-            { 
-                new: true, 
-                runValidators: true
-            }
-        ).select('-password');
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                user_id,
+                { $set: updateFields },
+                { 
+                    new: true, 
+                    runValidators: true
+                }
+            ).select('-password');
 
-        if (!updatedUser) {
+            if (!updatedUser) {
             return response.status(404).json({ message: "User not found." });
-        }
+            }
 
-        return response.status(200).json({
-            message: "Profile updated successfully!",
-            user: updatedUser.toObject() 
-        });
+            return response.status(200).json({
+                message: "Profile updated successfully!",
+                user: updatedUser.toObject() 
+            });
+        } catch (err) {
+            if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
+                return response.status(409).json({
+                    message: "This email address is already in use."
+                });
+            }
+        }
 
     } catch (error) {
         normalize_system_error_response(error, response);

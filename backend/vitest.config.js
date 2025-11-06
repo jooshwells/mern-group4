@@ -6,7 +6,7 @@ export default defineConfig({
 
     globals: true,
 
-    include: ['src/modules/auth/v2/tests/*.js'],
+    include: ['src/modules/auth/v2/tests/*.js', 'src/modules/profile/tests/*.js'],
 
     testTimeout: 10000,
   },
