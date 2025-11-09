@@ -19,9 +19,7 @@ function Pfptop() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const apiResponse = await fetch("api/auth/user", {
-          credentials: "include",
-        });
+        const apiResponse = await fetch("api/auth/user", { credentials: "include" });
         if (!apiResponse.ok) throw new Error(`Error ${apiResponse.status}`);
         const userInfo = await apiResponse.json();
         if (userInfo.success) {
@@ -50,17 +48,20 @@ function Pfptop() {
             <img
               src={selectedPic}
               alt="Profile"
-              className="h-full w-full rounded-full object-cover border-4 shadow-lg --border: 214.3 31.8% 91.4%; border-color: hsl(var(--border)); "
+              className={`h-full w-full rounded-full object-cover border-6 ${
+                theme === "dark" ? "border-amber-700" : "border-rose-400"
+              }`}
             />
           )}
 
           {/* Pencil/Edit Button */}
           <div
-            className="absolute bottom-1 right-1 rounded-full bg-amber-600 hover:bg-amber-700 flex items-center justify-center cursor-pointer"
+            className={`absolute bottom-1 right-1 rounded-full flex items-center justify-center cursor-pointer
+                        ${theme === "dark" ? "bg-amber-600 hover:bg-amber-700" : "bg-rose-400 hover:bg-rose-500"}`}
             style={{ width: "76px", height: "76px" }}
             onClick={() => setShowPicOptions(!showPicOptions)}
           >
-            <PencilLine width={28} height={28} />
+            <PencilLine width={28} height={28} className="text-white" />
           </div>
 
           {/* Profile Selection Grid Overlay */}
@@ -68,10 +69,8 @@ function Pfptop() {
             <div
               className="absolute top-full left-0 mt-2 grid grid-cols-5 gap-2 border-2 p-4 rounded shadow-lg z-50"
               style={{
-                backgroundColor:
-                  theme === "dark" ? "oklch(40% 0.05 265deg)" : "#ffffff",
-                borderColor:
-                  theme === "dark" ? "oklch(28% 0.05 265deg)" : "#cccccc",
+                backgroundColor: theme === "dark" ? "oklch(40% 0.05 265deg)" : "#ffffff",
+                borderColor: theme === "dark" ? "oklch(28% 0.05 265deg)" : "#cccccc",
               }}
             >
               {profileOptions.map((pic, index) => (
@@ -79,7 +78,9 @@ function Pfptop() {
                   key={index}
                   src={pic}
                   alt={`Profile option ${index + 1}`}
-                  className="h-12 w-12 rounded-full object-cover hover:ring-2 hover:ring-amber-600 cursor-pointer"
+                  className={`h-12 w-12 rounded-full object-cover cursor-pointer hover:ring-2 ${
+                    theme === "dark" ? "hover:ring-amber-600" : "hover:ring-teal-600"
+                  }`}
                   onClick={() => {
                     setSelectedPic(pic);
                     setShowPicOptions(false);
@@ -94,10 +95,10 @@ function Pfptop() {
       {/* Right Column: Text Info */}
       <div className="flex flex-col w-full md:w-1/2 justify-start items-start gap-4">
         <div className="flex flex-col font-bold text-3xl gap-2.5">
-          <p>{firstN}</p>
-          <p>{lastN}</p>
+          <p className="text-gray-800 dark:text-gray-300">{firstN}</p>
+          <p className="text-gray-800 dark:text-gray-300">{lastN}</p>
         </div>
-        <p className="text-2xl text-gray-500 dark:text-gray-300">{eMail}</p>
+        <p className="text-2xl text-gray-800 dark:text-gray-300">{eMail}</p>
       </div>
     </div>
   );
