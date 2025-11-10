@@ -49,7 +49,7 @@ function Pfptop() {
               src={selectedPic}
               alt="Profile"
               className={`h-full w-full rounded-full object-cover border-6 ${
-                theme === "dark" ? "border-amber-700" : "border-rose-400"
+                theme === "dark" ? "border-amber-600" : "border-rose-400"
               }`}
             />
           )}
