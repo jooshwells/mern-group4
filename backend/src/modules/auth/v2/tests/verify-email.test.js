@@ -54,7 +54,7 @@ describe("/api/auth/verify-email", () => {
         await user.save();
 
         const response = await request(app)
-        .post("/api/auth/user/verify-email/" + verification_token)
+        .get("/api/auth/user/verify-email/" + verification_token)
 
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveProperty("verification_status", "Verified");
@@ -79,7 +79,7 @@ describe("/api/auth/verify-email", () => {
         await user.save();
 
         const response = await request(app)
-        .post("/api/auth/user/verify-email/" + verification_token)
+        .get("/api/auth/user/verify-email/" + verification_token)
 
         expect(response.statusCode).toBe(400);
         expect(response.body).toHaveProperty("verification_status", "Invalid token");
@@ -104,7 +104,7 @@ describe("/api/auth/verify-email", () => {
         user.save();
 
         const response = await request(app)
-        .post("/api/auth/user/verify-email/" + verification_token)
+        .get("/api/auth/user/verify-email/" + verification_token)
 
         expect(response.statusCode).toBe(400);
         expect(response.body).toHaveProperty("verification_status", "Invalid token");
@@ -128,7 +128,7 @@ describe("/api/auth/verify-email", () => {
         await user.deleteOne();
 
         const response = await request(app)
-        .post("/api/auth/user/verify-email/" + verification_token)
+        .get("/api/auth/user/verify-email/" + verification_token)
 
         expect(response.statusCode).toBe(400);
         expect(response.body).toHaveProperty("verification_status", "Invalid token");
@@ -153,7 +153,7 @@ describe("/api/auth/verify-email", () => {
         await user.save();
 
         const response = await request(app)
-        .post("/api/auth/user/verify-email/" + jwt.sign(
+        .get("/api/auth/user/verify-email/" + jwt.sign(
             { type: "email-verification-token", user: { _id: user._id, email: user.email }, nonsense: "gobbledegook" }, 
             process.env.JWT_SECRET, 
             {expiresIn: '12h'}
