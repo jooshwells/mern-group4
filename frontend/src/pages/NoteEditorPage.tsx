@@ -26,10 +26,13 @@ import { useTheme } from "@/components/theme-provider";
 import { Timer } from "@/components/timer";
 import Draggable from "react-draggable";
 import { useRef } from "react";
+import { useShortcut } from "@hookies/key-bindings";
 
 export function NoteEditorPage() {
   const { setTheme } = useTheme();
-
+  useShortcut(["Ctrl", "S"], () => console.log("saved"), {
+    preventDefault: true,
+  });
   const nodeRef = useRef(null);
 
   return (
