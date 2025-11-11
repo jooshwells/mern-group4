@@ -10,7 +10,7 @@ describe("/api/auth/user/authenticate", () => {
     beforeAll(async () => {
         try 
         {
-            if (process.env.NODE_ENV === "production")
+            if (process.env.NODE_ENV === "test")
             {
                 await mongoose.connect(process.env.MONGO_URI);
                 console.log("Connected to production database `" + process.env.MONGO_URI + "`. Ready for testing!");
