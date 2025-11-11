@@ -124,6 +124,7 @@ export const authenticate_user = (req, res) => {
 export const verify_user_email = (req, res) => {
     try {
         const { user } = req.body;
+        console.log(user)
 
         user.verification_token = null;
         user.is_verified = true;
