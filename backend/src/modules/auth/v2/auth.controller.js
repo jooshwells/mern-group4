@@ -74,11 +74,14 @@ export const login_user = (req, res) => {
  * @Postcondition  
 */
 export const logout_user = (req, res) => {
-    try {
-        
-    } catch (error) {
-        
-    }
+    response.cookie("nanta-session", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        expires: new Date(0)
+    });
+
+    return response.success({}, "User logged out", 200);
 }
 
 /**
