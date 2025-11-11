@@ -40,7 +40,11 @@ export const register_user = async (req, res, next) => {
         );
         await user.save();
         req.body.user = user;
-        // await send_verification_email(req, res, next); // appears to not be working at the moment
+        
+        if (process.env.NODE_ENV != "test")
+            await send_verification_email(req, res, next);
+        
+        
         return res.status(200).send("User registered successfully!");
     } catch (err) {
         next(err);
