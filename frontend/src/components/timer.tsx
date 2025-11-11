@@ -117,64 +117,64 @@ export function Timer({
   };
 
   return (
-    <Draggable handle=".handle" nodeRef={nodeRef}>
-      <div ref={nodeRef} className={`z-40 flex flex-row`}>
-        <div className="flex w-md my-0 opacity-95 flex-col">
-          <div className="flex flex-1 flex-row">
-            <Button
-              variant={currentMode == "pomodoro" ? "default" : "ghost"}
-              onClick={handlePomodoroButton}
-              className={`${
-                currentMode == "pomodoro" ? "flex-2 font-bold" : "flex-1"
-              } px-0 h-6 text-xs rounded-none`}
-            >
-              Pomodoro
-            </Button>
-            <Button
-              className={`${
-                currentMode == "shortbreak" ? "flex-2 font-bold" : "flex-1"
-              }
+    // <Draggable handle=".handle" nodeRef={nodeRef}>
+    <div ref={nodeRef} className={`z-40 flex flex-row`}>
+      <div className="flex w-md my-0 opacity-95 flex-col">
+        <div className="flex flex-1 flex-row">
+          <Button
+            variant={currentMode == "pomodoro" ? "default" : "ghost"}
+            onClick={handlePomodoroButton}
+            className={`${
+              currentMode == "pomodoro" ? "flex-2 font-bold" : "flex-1"
+            } px-0 h-6 text-xs rounded-none`}
+          >
+            Pomodoro
+          </Button>
+          <Button
+            className={`${
+              currentMode == "shortbreak" ? "flex-2 font-bold" : "flex-1"
+            }
            px-0 h-6 text-xs  rounded-none`}
-              variant={currentMode == "shortbreak" ? "default" : "ghost"}
-              onClick={handleShortBreakButton}
-            >
-              Short Break
-            </Button>
-            <Button
-              className={`${
-                currentMode == "longbreak" ? "flex-2 font-bold" : "flex-1"
-              } px-0 h-6 text-xs rounded-none`}
-              variant={currentMode == "longbreak" ? "default" : "ghost"}
-              onClick={handleLongBreakButton}
-            >
-              Long Break
-            </Button>
-          </div>
-          <div className="flex flex-6 flex-row">
-            <Button
-              variant={timerRunning ? "destructive" : "default"}
-              onClick={handleStartButton}
-              className="flex-1 rounded-none"
-            >
-              {timerRunning ? "Stop" : "Start"}
-            </Button>
-            <h1 className="flex-1 text-center  bg-accent m-auto px-5 font-bold text-3xl">
-              {Math.floor(currentTime / 60)}:
-              {String(currentTime % 60).padStart(2, "0")}
-            </h1>
-            <Button
-              onClick={handleNextButton}
-              className="flex-1 w-20 rounded-none"
-              variant="default"
-            >
-              Next
-            </Button>
-          </div>
+            variant={currentMode == "shortbreak" ? "default" : "ghost"}
+            onClick={handleShortBreakButton}
+          >
+            Short Break
+          </Button>
+          <Button
+            className={`${
+              currentMode == "longbreak" ? "flex-2 font-bold" : "flex-1"
+            } px-0 h-6 text-xs rounded-none`}
+            variant={currentMode == "longbreak" ? "default" : "ghost"}
+            onClick={handleLongBreakButton}
+          >
+            Long Break
+          </Button>
         </div>
-        <div className="handle z-50 hover:cursor-grab bg-accent flex">
-          <GripVerticalIcon className="my-auto" />
+        <div className="flex flex-6 flex-row">
+          <Button
+            variant={timerRunning ? "destructive" : "default"}
+            onClick={handleStartButton}
+            className="flex-1 rounded-none"
+          >
+            {timerRunning ? "Stop" : "Start"}
+          </Button>
+          <h1 className="flex-1 text-center  bg-accent m-auto px-5 font-bold text-3xl">
+            {Math.floor(currentTime / 60)}:
+            {String(currentTime % 60).padStart(2, "0")}
+          </h1>
+          <Button
+            onClick={handleNextButton}
+            className="flex-1 w-20 rounded-none"
+            variant="default"
+          >
+            Next
+          </Button>
         </div>
       </div>
-    </Draggable>
+      {/* <div className="handle z-50 hover:cursor-grab bg-accent flex">
+        <GripVerticalIcon className="my-auto" />
+      </div> */}
+    </div>
+    // </Draggable>
   );
 }

@@ -81,15 +81,18 @@ export function NoteEditor() {
             </Breadcrumb>
           </header>
           {/* Remove the handle prop so that you can click anywhere on the  */}
-          <Draggable
+          {/* <Draggable
             bounds={{ top: 50, left: 500, bottom: 100, right: 100 }}
             handle=".handle"
             nodeRef={nodeRef}
+          > */}
+          <div
+            ref={nodeRef}
+            className="sm:top-0 bottom-0 absolute w-2xs z-50 right-20 mx-auto"
           >
-            <div ref={nodeRef} className=" absolute z-50 right-20 mx-auto">
-              <Timer />
-            </div>
-          </Draggable>
+            <Timer />
+          </div>
+          {/* </Draggable> */}
           <div className="h-full">
             <TextEditor />
           </div>
