@@ -27,7 +27,7 @@ import { Timer } from "@/components/timer";
 import Draggable from "react-draggable";
 import { useRef } from "react";
 
-export function NoteEditor() {
+export function NoteEditorPage() {
   const { setTheme } = useTheme();
 
   const nodeRef = useRef(null);
