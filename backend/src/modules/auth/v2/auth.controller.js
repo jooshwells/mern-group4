@@ -139,6 +139,13 @@ export const send_verification_email = async (req, res, next) => {
     try {
         const { user } = req.body;
 
+        const verification_token = jsonwebtoken.sign({ type: "email_verification", user_id: user._id, email: user.email }, process.env.JWT_SECRET, {expiresIn: '12h'});
+
+        user.verification_token = verification_token;
+        user.save();
+
+        const verification_link = "http://aedogroupfour-lamp.xyz/api/auth/verify-email/" + verification_token;
+
         const transporter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
@@ -153,7 +160,7 @@ export const send_verification_email = async (req, res, next) => {
 
         const rendered_html = ejs.render(
             html_template, 
-            { first_name: user.first_name, last_name: user.last_name }
+            { first_name: user.first_name, last_name: user.last_name, verification_link: verification_link }
         );
 
         const info = await transporter.sendMail({
