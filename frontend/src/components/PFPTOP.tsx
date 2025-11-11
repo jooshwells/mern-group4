@@ -14,7 +14,9 @@ function Pfptop() {
   const [lastN, setLastN] = useState("Last Name");
   const [load, setLoad] = useState(true);
   const [showPicOptions, setShowPicOptions] = useState(false);
-  const [selectedPic, setSelectedPic] = useState(profileOptions[0]);
+
+  //save user's selected profile picture index
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,11 +38,12 @@ function Pfptop() {
     fetchUser();
   }, []);
 
+  const selectedPic = profileOptions[selectedIndex];
+
   return (
     <div className="flex flex-col w-full md:flex-row gap-10 items-start mt-10">
       {/* Left Column: Profile Picture */}
       <div className="flex flex-col items-center w-full md:w-1/2">
-        {/* Profile picture wrapper */}
         <div className="relative w-[300px] h-[300px] ml-80">
           {load ? (
             <div className="h-full w-full rounded-full bg-gray-300 animate-pulse" />
@@ -64,7 +67,7 @@ function Pfptop() {
             <PencilLine width={28} height={28} className="text-white" />
           </div>
 
-          {/* Profile Selection Grid Overlay */}
+          {/* Profile Selection Grid */}
           {showPicOptions && (
             <div
               className="absolute top-full left-0 mt-2 grid grid-cols-5 gap-2 border-2 p-4 rounded shadow-lg z-50"
@@ -82,8 +85,10 @@ function Pfptop() {
                     theme === "dark" ? "hover:ring-amber-600" : "hover:ring-teal-600"
                   }`}
                   onClick={() => {
-                    setSelectedPic(pic);
+                    setSelectedIndex(index);
+                    console.log(selectedIndex);
                     setShowPicOptions(false);
+                    console.log("Selected picture value:", index);
                   }}
                 />
               ))}
@@ -99,6 +104,11 @@ function Pfptop() {
           <p className="text-gray-800 dark:text-gray-300">{lastN}</p>
         </div>
         <p className="text-2xl text-gray-800 dark:text-gray-300">{eMail}</p>
+
+        {/* Just to show which value is chosen */}
+        <p className="text-lg text-gray-500 dark:text-gray-400">
+          Selected Picture Value: {selectedIndex}
+        </p>
       </div>
     </div>
   );
