@@ -147,7 +147,7 @@ export const send_verification_email = async (req, res, next) => {
         user.verification_token = verification_token;
         user.save();
 
-        const verification_link = "http://aedogroupfour-lamp.xyz/api/auth/verify-email/" + verification_token;
+        const verification_link = "http://aedogroupfour-lamp.xyz/api/auth/user/verify-email/" + verification_token;
 
         const transporter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
