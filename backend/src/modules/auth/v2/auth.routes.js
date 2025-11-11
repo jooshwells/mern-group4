@@ -16,7 +16,7 @@ router.post("/logout", logout_user);
 // User and email verification routes
 router.get("/user", validate_session_token, get_user_data);
 router.get("/user/authenticate", validate_session_token, authenticate_user);
-router.post("/user/verify-email/resend", validate_session_token, send_verification_email);
-router.post("/user/verify-email/:token", validate_verification_token, verify_user_email);
+router.get("/user/verify-email/resend", validate_session_token, send_verification_email);
+router.get("/user/verify-email/:token", validate_verification_token, verify_user_email);
 
 export default router;

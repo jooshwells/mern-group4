@@ -143,8 +143,7 @@ export const send_verification_email = async (req, res, next) => {
     try {
         const { user } = req.body;
 
-        const verification_token = jwt.sign({ type: "email_verification", user_id: user._id, email: user.email }, process.env.JWT_SECRET, {expiresIn: '12h'});
-
+        const verification_token = user.verification_token
         user.verification_token = verification_token;
         user.save();
 
