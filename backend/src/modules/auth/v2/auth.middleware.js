@@ -205,6 +205,7 @@ export const validate_verification_token = async (req, res, next) => {
 
         next();
     } catch (err) {
-        return res.status(400).send({ verification_status: "Invalid token" });
+        return res.redirect("http://aedogroupfour-lamp.xyz/?status=failure");
+        // return res.status(400).send({ verification_status: "Invalid token" });
     }
 }

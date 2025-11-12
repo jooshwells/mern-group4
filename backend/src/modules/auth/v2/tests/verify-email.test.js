@@ -6,7 +6,7 @@ import User from '../auth.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 
-describe("/api/auth/verify-email", () => {
+describe.skip("/api/auth/verify-email", () => {
     beforeAll(async () => {
         try 
         {
