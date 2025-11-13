@@ -14,9 +14,9 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div
-    className="flex flex-col min-h-screen items-center justify-start p-6 relative
-             border-[25px] border-gray-203 dark:border-gray-800">
-
+      className="flex flex-col min-h-screen items-center justify-start p-6 relative
+             border-[25px] border-gray-203 dark:border-gray-800"
+    >
       {/* Theme and Home */}
       <Theme />
       <div className="absolute right-4 top-4">
@@ -29,13 +29,12 @@ const ProfilePage: React.FC = () => {
       </div>
 
       {/* Separator */}
-      <div className="mt-5 border-t-8 w-full rounded border-rose-400 dark:border-amber-600"></div>
+      <div className="mt-5 border-t-8 w-full rounded border-foreground dark:border-foreground"></div>
 
       {/* Edit Account Section */}
-      <div className="mt-10">
+      <div className="mt-10 w-[70%]">
         <EditAccount className={`hide ? "block" : "hidden"`} />
       </div>
-
     </div>
   );
 };

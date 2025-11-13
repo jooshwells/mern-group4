@@ -1,9 +1,16 @@
 import { Button } from "./ui/button";
-import { useState } from "react";
-import { FileCheck } from "lucide-react";
+import { useState, useEffect } from "react";
+import { FileCheck, PencilLine } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 interface EditAccountProps {
   className?: string;
@@ -11,77 +18,254 @@ interface EditAccountProps {
 
 function EditAccount({ className }: EditAccountProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    old_password: "",
+    password: "",
+    confirm_password: "",
+  });
+
+  // Fetch current user data on mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/auth/user", {
+          credentials: "include",
+        });
+        if (!response.ok) throw new Error(`Error ${response.status}`);
+        const data = await response.json();
+        if (data.success) {
+          setFormData((prev) => ({
+            ...prev,
+            first_name: data.data.user.first_name,
+            last_name: data.data.user.last_name,
+            email: data.data.user.email,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        toast.error("Failed to load user information");
+      }
+    };
+    fetchUser();
+  }, []);
 
   const togglePWEdit = () => setShowPassword((prev) => !prev);
-  const closePWEdit = () => setShowPassword(false);
+  const closePWEdit = () => {
+    setShowPassword(false);
+    // Clear password fields
+    setFormData((prev) => ({
+      ...prev,
+      old_password: "",
+      password: "",
+      confirm_password: "",
+    }));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    // Validation
+    if (!formData.first_name || !formData.last_name || !formData.email) {
+      toast.error("First name, last name, and email are required.");
+      setLoading(false);
+      return;
+    }
+
+    // Password validation if changing password
+    if (showPassword && formData.password) {
+      if (formData.password.length < 8) {
+        toast.error("Password must be at least 8 characters.");
+        setLoading(false);
+        return;
+      }
+
+      if (formData.password !== formData.confirm_password) {
+        toast.error("Passwords do not match.");
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.old_password) {
+        toast.error("Please enter your old password.");
+        setLoading(false);
+        return;
+      }
+    }
+
+    try {
+      // Prepare update payload
+      const updatePayload: any = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+      };
+
+      // Only include password fields if changing password
+      if (showPassword && formData.password) {
+        updatePayload.old_password = formData.old_password;
+        updatePayload.password = formData.password;
+      }
+
+      const response = await fetch("/api/profile/update-info", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(updatePayload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.ok) {
+        toast.success(data.message || "Profile updated successfully!");
+
+        if (showPassword) {
+          closePWEdit();
+        }
+
+        window.location.reload();
+      } else {
+        toast.error(data.message || "Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("An error occurred while updating your profile.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full">
-      <Card className="w-full relative">
+      <Card className="w-full relative bg-background border-foreground">
         <CardHeader>
-          <CardTitle className="flex justify-center text-3xl font-bold">Edit Account</CardTitle>
+          <CardTitle className="flex justify-center text-3xl font-bold text-foreground">
+            Edit Account
+          </CardTitle>
           <CardDescription className="flex justify-center">
             Select any of the fields below to change your account information
           </CardDescription>
         </CardHeader>
 
-        {/* CardContent with reserved min-height */}
         <CardContent className="relative min-h-[16rem]">
-          <div className="flex flex-row gap-8 h-full">
+          <div className="flex flex-col gap-6 h-full">
             {/* Left column: Name & Email */}
             <div className="flex flex-col gap-6 flex-1">
               {/* First and Last Name side by side */}
               <div className="flex gap-5">
                 <div className="flex flex-col flex-1 gap-3">
-                  <Label className="font-bold">First Name</Label>
-                  <Input type="text" />
+                  <Label className="font-bold text-foreground">
+                    First Name
+                  </Label>
+                  <Input
+                    type="text"
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleInputChange}
+                    className="rounded-3xl"
+                  />
                 </div>
                 <div className="flex flex-col flex-1 gap-3">
-                  <Label className="font-bold">Last Name</Label>
-                  <Input type="text" />
+                  <Label className="font-bold text-foreground">Last Name</Label>
+                  <Input
+                    type="text"
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleInputChange}
+                    className="rounded-3xl"
+                  />
                 </div>
               </div>
 
               {/* Email centered below */}
               <div className="flex justify-center">
-                <div className="flex flex-col w-1/2 gap-3">
-                  <Label className="font-bold text-center">Email</Label>
-                  <Input type="email" />
+                <div className="flex flex-col w-full gap-3">
+                  <Label className="font-bold text-center text-foreground">
+                    Email
+                  </Label>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="rounded-3xl"
+                  />
                 </div>
               </div>
 
-              {/* Change Password button: always centered */}
-              <div className="flex justify-center mt-0 w-full absolute bottom-12 left-0">
-                <Button
-                  className="bg-rose-400 hover:bg-rose-500 dark:bg-amber-600 dark:hover:bg-amber-700 text-white"
-                  onClick={togglePWEdit}
-                >
-                  Change Password
-                </Button>
+              {/* Password */}
+              <div className="flex justify-center">
+                <div className="flex flex-col w-full gap-3">
+                  <Label className="font-bold text-center text-foreground">
+                    Password
+                  </Label>
+                  <Input
+                    type="password"
+                    name="pwkey"
+                    value="........"
+                    disabled
+                    className="rounded-3xl"
+                  />
+                  {/* Change Password button: always centered */}
+                  <div className="relative mt-0 bottom-12 flex justify-end">
+                    <Button
+                      className="bg-foreground hover:bg-rose-500 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-3xl"
+                      onClick={togglePWEdit}
+                      type="button"
+                    >
+                      <PencilLine />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Right column: password panel */}
+            {/* Bottom: password panel */}
             <div
-              className="overflow-hidden transition-all duration-500 flex-shrink-0 flex flex-col gap-5"
+              className="overflow-hidden transition-all duration-300 ease-in-out"
               style={{
-                maxWidth: showPassword ? "500px" : "0px",
-                minWidth: showPassword ? "300px" : "0px",
+                maxHeight: showPassword ? "500px" : "0px",
               }}
             >
-              <div className={`transition-opacity duration-500 ${showPassword ? "opacity-100" : "opacity-0"}`}>
-                <div className="flex flex-col gap-3">
-                  <Label className="font-bold">Old Password</Label>
-                  <Input type="password" placeholder="Old Password" />
-                </div>
+              <div
+                className={`transition-opacity duration-500 ${
+                  showPassword ? "opacity-100" : "opacity-0"
+                }`}
+              >
                 <div className="flex gap-5 mt-3">
                   <div className="flex flex-col flex-1 gap-3">
                     <Label className="font-bold">New Password</Label>
-                    <Input type="password" placeholder="New Password" />
+                    <Input
+                      type="password"
+                      name="password"
+                      placeholder="New Password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="rounded-3xl"
+                    />
                   </div>
                   <div className="flex flex-col flex-1 gap-3">
                     <Label className="font-bold">Confirm Password</Label>
-                    <Input type="password" placeholder="Confirm New Password" />
+                    <Input
+                      type="password"
+                      name="confirm_password"
+                      placeholder="Confirm New Password"
+                      value={formData.confirm_password}
+                      onChange={handleInputChange}
+                      className="rounded-3xl"
+                    />
                   </div>
                 </div>
               </div>
@@ -89,10 +273,12 @@ function EditAccount({ className }: EditAccountProps) {
           </div>
 
           {/* Save button always bottom-right */}
-          <div className="absolute bottom-1 right-4">
+          <div className="w-full flex justify-end mt-2">
             <Button
-              className="w-10 rounded-4xl bg-rose-400 hover:bg-rose-500 dark:bg-amber-600 dark:hover:bg-amber-700 text-white"
-              onClick={closePWEdit}
+              className="mr-0 w-10 rounded-4xl bg-foreground hover:bg-primary-500 dark:bg-blue-600 dark:hover:bg-blue-700 text-white disabled:opacity-50"
+              onClick={handleSubmit}
+              disabled={loading}
+              type="button"
             >
               <FileCheck size={20} />
             </Button>
