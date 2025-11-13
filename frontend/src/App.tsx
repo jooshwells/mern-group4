@@ -1,33 +1,74 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
-import { GitHubLink } from "./components/github";
-import { Link } from "react-router-dom";
-import Header from "./components/ui/header.tsx";
-import Theme from "./components/ui/theme-menu.tsx";
+import './App.css'
+import { Button } from './components/ui/button'
+import { Link } from "react-router-dom"
+import Header from './components/ui/header'
+import { motion } from "framer-motion"
+import StickyHeader from './components/sticky-header'
+import Reviews from "./components/ui/reviews";
 
 function App() {
   return (
-    <div className="flex flex-col h-full min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <Theme />
+    <div className="relative flex flex-col min-h-svh w-full items-center justify-center p-6 md:p-10 bg-background text-foreground">
 
-      {/* GitHub link */}
-      <div className="absolute right-4 top-4">
-        <GitHubLink />
-      </div>
+     {/* scrolling sticky header */}
+      <StickyHeader />
 
-      <Header />
+      {/* Main content */}
+      {/* motion divs for animations */}
+      <main className="flex flex-col items-center text-center mt-8 md:mt-12 space-y-10 max-w-3xl">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Header />
+          <p className="mt-4 text-lg text-muted-foreground max-w-lg">
+            Built for thinkers, dreamers, and doers.  
+            Organize your thoughts with speed and elegance, better than the rest.
+          </p>
+        </motion.div>
 
-      {/* login + signup buttons */}
-      <div className="flex gap-4 mb-6">
-        <Link to="/login">
-          <Button>Login</Button>
-        </Link>
-        <Link to="/signup">
-          <Button>Sign Up</Button>
-        </Link>
-      </div>
-    </div>
-  );
+        {/* signup button*/}
+        <motion.div
+          className="flex flex-wrap justify-center gap-4 mt-1 mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+           <Link to="/signup">
+            <Button
+              size="lg"
+              className="px-10 py-8 -ml-4 text-lg" >
+              Sign Up Now!
+            </Button>
+          </Link>
+        </motion.div>
+
+      </main>
+
+      {/* notes preview */}
+      <motion.img
+        src="/notes-light.png"
+        alt="Notes preview in light mode"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="w-[1050px] h-[670px] object-fill rounded-2xl p-2 border-2 border-foreground dark:hidden"
+      />
+
+      <motion.img
+        src="/notes-dark.png"
+        alt="Notes preview in dark mode"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="w-[1050px] h-[670px] object-fill rounded-2xl p-2 border-2 border-foreground hidden dark:block"
+      />
+
+      {/* reviews wrapper */}
+      <Reviews/>
+  </div>
+  )
 }
 
-export default App;
+export default App

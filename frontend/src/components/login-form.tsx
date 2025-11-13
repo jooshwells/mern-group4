@@ -15,12 +15,15 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"   // testing change
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate()
+
+  const [error, setError] = useState("")   // testing
 
   const handle_submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -35,11 +38,20 @@ export function LoginForm({
         body: JSON.stringify(data),
       })
   
-      console.log(res);
+      //console.log(res);
+      // if (res.ok) {
+      //     navigate("/profile");
+      // }
 
-      if (res.ok) {
-          navigate("/profile");
+      // testing change
+      if (!res.ok) {   
+        const json = await res.json().catch(() => null)   
+        setError(json?.errors?.login?.msg || "Invalid email or password")  
+        return   
       }
+
+      navigate("/profile")
+
     } catch (err) {
       console.error("Server error. Please try again later")
     }
@@ -75,14 +87,17 @@ export function LoginForm({
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
-                    Forgot your password?
                   </a>
                 </div>
                 <Input name="password" id="password" type="password" required />
               </Field>
+                    {/* testing */}
+                    {error && (
+                      <p className="text-red-500 text-lg mt-2">{error}</p>
+                    )}
+
               <Field>
                 <Button type="submit">Login</Button>
-
               </Field>
             </FieldGroup>
           </form>

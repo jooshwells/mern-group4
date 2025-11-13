@@ -51,8 +51,16 @@ export function ThemeProvider({
     return () => mql.removeEventListener?.("change", onChange);
   }, [theme]);
 
+  // issues with system theme, only return light or dark
+  const getResolvedTheme = (t: Theme): "dark" | "light" => {
+    if (t === "dark") return "dark";
+    if (t === "light") return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+
+  //change to only reutrn dark or light, no system
   const value = {
-    theme,
+   theme: getResolvedTheme(theme), // always dark or light
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme);
       setTheme(theme);
