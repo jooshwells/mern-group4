@@ -10,9 +10,9 @@ export function GitHubLink() {
       className="transition hover:opacity-75"
     >
       {theme === 'dark' ? (
-        <img src="/github-mark-white.png" alt="GitHub Profile" className="w-18 h-18" />
+        <img src="/github-mark-white.png" alt="GitHub Profile" className="w-14 h-14" />
       ) : (
-        <img src="/github-mark.png" alt="GitHub Profile" className="w-18 h-18" />
+        <img src="/github-mark.png" alt="GitHub Profile" className="w-14 h-14" />
       )}
     </a>
   );
