@@ -11,6 +11,17 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogOverlay,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@radix-ui/react-alert-dialog";
+import { AlertDialogFooter, AlertDialogHeader } from "./ui/alert-dialog";
 
 interface EditAccountProps {
   className?: string;
@@ -128,7 +139,7 @@ function EditAccount({ className }: EditAccountProps) {
 
       const data = await response.json();
 
-      if (response.ok && data.ok) {
+      if (response.ok) {
         toast.success(data.message || "Profile updated successfully!");
 
         if (showPassword) {
@@ -274,14 +285,40 @@ function EditAccount({ className }: EditAccountProps) {
 
           {/* Save button always bottom-right */}
           <div className="w-full flex justify-end mt-2">
-            <Button
-              className="mr-0 w-10 rounded-4xl bg-foreground hover:bg-primary-500 dark:bg-blue-600 dark:hover:bg-blue-700 text-white disabled:opacity-50"
-              onClick={handleSubmit}
-              disabled={loading}
-              type="button"
-            >
-              <FileCheck size={20} />
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  className="mr-0 w-10 rounded-4xl bg-foreground hover:bg-primary-500 dark:bg-blue-600 dark:hover:bg-blue-700 text-white disabled:opacity-50"
+                  //
+                  disabled={loading}
+                  type="button"
+                >
+                  <FileCheck size={20} />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogOverlay className="fixed inset-0 bg-black/50" />
+
+              <AlertDialogContent className="border border-foreground bg-background rounded-3xl p-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Account Changes</AlertDialogTitle>
+                  <AlertDialogDescription className="mb-5">
+                    Pressing confirm will update the edited fields to the values
+                    in the fields
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="border border-foreground rounded-2xl p-2">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleSubmit}
+                    className="bg-foreground text-background border border-primary rounded-2xl p-2"
+                  >
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </CardContent>
       </Card>

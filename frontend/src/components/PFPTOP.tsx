@@ -19,12 +19,17 @@ function Pfptop() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const apiResponse = await fetch("api/auth/user", {
+        const apiResponse = await fetch("/api/auth/user", {
+          method: "GET",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         if (!apiResponse.ok) throw new Error(`Error ${apiResponse.status}`);
         const userInfo = await apiResponse.json();
         if (userInfo.success) {
+          console.log(userInfo.data.user.email);
           setEmail(userInfo.data.user.email);
           setFirstN(userInfo.data.user.first_name);
           setLastN(userInfo.data.user.last_name);
