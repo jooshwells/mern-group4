@@ -10,12 +10,12 @@ const HomeButton: React.FC<{ className?: string }> = ({ className = "" }) => {
       <img
         src="/home.svg"
         alt="Home"
-        className={`h-14 w-14 cursor-pointer transition hover:opacity-80 ${className}`}
+        className={`h-10 w-10 cursor-pointer transition hover:opacity-80 ${className}`}
         style={{
           filter:
             theme === "dark"
               ? "invert(1) brightness(1.2)"
-              : "invert(0) brightness(1)",  
+              : "invert(0) brightness(1)",
         }}
       />
     </Link>

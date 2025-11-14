@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors"; // ADD THIS IMPORT
+
 dotenv.config({ quiet: true });
 
 // Middleware Imports
@@ -12,6 +14,15 @@ import { notes_routes } from "./modules/notes/notes.index.js";
 import { profile_routes } from "./modules/profile/profile.index.js";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Your Vite frontend URL
+    credentials: true, // CRITICAL: Allows cookies to be sent
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Middleware for parsing cookies attached to request object.
 app.use(cookieParser());
@@ -29,16 +40,16 @@ app.use("/api/profile", profile_routes);
 
 // 404 response
 app.use((req, res) => {
-    return res.status(404).json({
-        message: "Not found",
-        ok: false   
-    });
+  return res.status(404).json({
+    message: "Not found",
+    ok: false,
+  });
 });
 
 // Custom error handler
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send("Something broke!");
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
 export default app;
