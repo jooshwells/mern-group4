@@ -130,7 +130,7 @@ export const verify_user_email = (req, res) => {
         user.save()
 
 
-        return res.redirect("http://aedogroupfour-lamp.xyz/?status=success");
+        return res.redirect("http://aedogroupfour-lamp.xyz/login?verified=true");
     } catch (error) {
         
     }
