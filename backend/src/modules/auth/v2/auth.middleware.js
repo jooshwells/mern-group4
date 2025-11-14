@@ -191,21 +191,21 @@ export const validate_verification_token = async (req, res, next) => {
         const verification_token = jwt.verify(req.params.token, process.env.JWT_SECRET);
 
         if(verification_token.type !== "email-verification-token")
-            return res.status(400).send({ verification_status: "Invalid token" });
+            return res.redirect("http://aedogroupfour-lamp.xyz/login?verified=false");
 
         const user = await User.findOne({ _id: verification_token.user._id });
 
         if(!user)
-            return res.status(400).send({ verification_status: "Invalid token" });
+            return res.redirect("http://aedogroupfour-lamp.xyz/login?verified=false");
 
         if(user.verification_token !== req.params.token)
-            return res.status(400).send({ verification_status: "Invalid token" });
+            return res.redirect("http://aedogroupfour-lamp.xyz/login?verified=false");
 
         req.body = { user: user };
 
         next();
     } catch (err) {
-        return res.redirect("http://aedogroupfour-lamp.xyz/?status=failure");
+        return res.redirect("http://aedogroupfour-lamp.xyz/login?verified=false");
         // return res.status(400).send({ verification_status: "Invalid token" });
     }
 }
