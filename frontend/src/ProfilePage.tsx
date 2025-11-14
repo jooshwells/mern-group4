@@ -4,6 +4,7 @@ import HomeButton from "./components/HomeButton.tsx";
 import Pfptop from "./components/PFPTOP.tsx";
 import EditAccount from "./components/EditAccount.tsx";
 import RecentWork from "./components/RecentWork.tsx";
+import { Toaster } from "sonner";
 
 const ProfilePage: React.FC = () => {
   const [hide, setVisible] = useState(false);
@@ -22,6 +23,8 @@ const ProfilePage: React.FC = () => {
       <div className="absolute right-4 top-4">
         <HomeButton />
       </div>
+
+      <Toaster richColors position="top-center" />
 
       {/* Profile Picture Section */}
       <div className="mt-10 w-full justify-center">

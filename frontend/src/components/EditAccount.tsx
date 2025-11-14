@@ -146,7 +146,7 @@ function EditAccount({ className }: EditAccountProps) {
           closePWEdit();
         }
 
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1500);
       } else {
         toast.error(data.message || "Failed to update profile.");
       }
