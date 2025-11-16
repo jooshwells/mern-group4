@@ -14,7 +14,10 @@ function Pfptop() {
   const [lastN, setLastN] = useState("Last Name");
   const [load, setLoad] = useState(true);
   const [showPicOptions, setShowPicOptions] = useState(false);
-  const [selectedPic, setSelectedPic] = useState(profileOptions[0]);
+
+  // --- Profile picture selection state ---
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedPic = profileOptions[selectedIndex];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -96,7 +99,7 @@ function Pfptop() {
                       : "hover:ring-teal-600"
                   }`}
                   onClick={() => {
-                    setSelectedPic(pic);
+                    setSelectedIndex(index);
                     setShowPicOptions(false);
                   }}
                 />
@@ -107,18 +110,16 @@ function Pfptop() {
       </div>
 
       {/* Right Column: Text Info */}
-        <div className="flex flex-col w-full md:w-1/2 md:flex-nowrap justify-start items-start gap-4 ml-5 relative">
-          {/* Vertical Divider */}
-          <div className="absolute left-0 -top-4 h-[180px] border-l-6 border-gray-300 dark:border-gray-600"></div>
+      <div className="flex flex-col w-full md:w-1/2 md:flex-nowrap justify-start items-start gap-4 ml-5 relative">
+        {/* Vertical Divider */}
+        <div className="absolute left-0 -top-4 h-[180px] border-l-6 border-gray-400 dark:border-gray-500"></div>
 
-          <div className="flex flex-col font-bold text-3xl gap-2.5 pl-5">
-            <p className="text-foreground dark:text-gray-300">{firstN}</p>
-            <p className="text-foreground dark:text-gray-300">{lastN}</p>
-          </div>
-          <p className="text-2xl text-gray-800 dark:text-gray-300 pl-5">{eMail}</p>
+        <div className="flex flex-col font-bold text-3xl gap-2.5 pl-5">
+          <p className="text-foreground dark:text-gray-200">{firstN}</p>
+          <p className="text-foreground dark:text-gray-200">{lastN}</p>
         </div>
-
-
+        <p className="text-2xl text-forground dark:text-gray-200 pl-5">{eMail}</p>
+      </div>
 
     </div>
   );

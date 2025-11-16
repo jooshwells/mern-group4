@@ -160,7 +160,7 @@ function EditAccount({ className }: EditAccountProps) {
 
   return (
     <div className="w-full">
-      <Card className="w-full relative bg-background border-foreground border-4">
+      <Card className="w-full relative bg-background border-gray-400 border-5">
         <CardHeader>
           <CardTitle className="flex justify-center text-3xl font-bold text-foreground">
             Edit Account
