@@ -32,7 +32,7 @@ const ProfilePage: React.FC = () => {
       </div>
 
       {/* Separator */}
-      <div className="mt-5 border-t-8 w-full rounded border-foreground dark:border-foreground"></div>
+      <div className="mt-5 w-full rounded border-t-8 border-foreground dark:border-blue-600"></div>
 
       {/* Edit Account Section */}
       <div className="mt-10 w-[70%]">
