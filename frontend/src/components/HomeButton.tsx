@@ -16,6 +16,9 @@ const HomeButton: React.FC<{ className?: string }> = ({ className = "" }) => {
       });
       if (apiRes.ok) {
         window.location.href = "/";
+      } else {
+        console.log("Error logging out");
+        window.location.href = "/";
       }
     } catch (error) {}
   };
