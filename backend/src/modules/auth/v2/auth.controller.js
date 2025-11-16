@@ -76,7 +76,23 @@ export const login_user = (req, res) => {
  */
 export const logout_user = (req, res) => {
   try {
-  } catch (error) {}
+    res.cookie("nanta-session", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      expires: new Date(0),
+    });
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully!",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error during logout",
+    });
+  }
 };
 
 /**
@@ -86,7 +102,7 @@ export const logout_user = (req, res) => {
  */
 export const get_user_data = (req, res) => {
   try {
-    const  user  = req.user;
+    const user = req.user;
     if (!req.user) {
       console.log("ERROR: No user on request!");
       return res.status(401).json({
@@ -103,6 +119,7 @@ export const get_user_data = (req, res) => {
           last_name: user.last_name,
           email: user.email,
           is_verified: user.is_verified,
+          profile_pic: user.profile_pic,
         },
       },
       message: "User retrieved successfully!",

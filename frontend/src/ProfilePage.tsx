@@ -21,7 +21,7 @@ const ProfilePage: React.FC = () => {
       {/* Theme and Home */}
       <Theme />
       <div className="absolute right-4 top-4">
-        <HomeButton />
+        <HomeButton className="bg-amber-300" />
       </div>
 
       <Toaster richColors position="top-center" />

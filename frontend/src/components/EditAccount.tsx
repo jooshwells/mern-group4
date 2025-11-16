@@ -106,12 +106,12 @@ function EditAccount({ className }: EditAccountProps) {
         setLoading(false);
         return;
       }
-
+      /*
       if (!formData.old_password) {
         toast.error("Please enter your old password.");
         setLoading(false);
         return;
-      }
+      }*/
     }
 
     try {

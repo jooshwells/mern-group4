@@ -35,6 +35,7 @@ function Pfptop() {
           setEmail(userInfo.data.user.email);
           setFirstN(userInfo.data.user.first_name);
           setLastN(userInfo.data.user.last_name);
+          setSelectedIndex(userInfo.data.user.profile_pic || 0);
         }
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -45,9 +46,26 @@ function Pfptop() {
     fetchUser();
   }, []);
 
+  const handlePictureSelect = async (index: number) => {
+    setSelectedIndex(index);
+    setShowPicOptions(false);
+
+    try {
+      await fetch("/api/profile/update-info", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ profile_pic: index }),
+      });
+    } catch (error) {
+      console.error("Error saving profile picture");
+    }
+  };
+
   return (
     <div className="flex flex-col w-full md:flex-row gap-10 items-start mt-10">
-      
       {/* Left Column: Profile Picture */}
       <div className="flex flex-col items-center w-full md:w-1/2">
         <div className="relative w-[300px] h-[300px] md:ml-100 -mt-14">
@@ -99,8 +117,7 @@ function Pfptop() {
                       : "hover:ring-teal-600"
                   }`}
                   onClick={() => {
-                    setSelectedIndex(index);
-                    setShowPicOptions(false);
+                    handlePictureSelect(index);
                   }}
                 />
               ))}
@@ -118,9 +135,10 @@ function Pfptop() {
           <p className="text-foreground dark:text-gray-200">{firstN}</p>
           <p className="text-foreground dark:text-gray-200">{lastN}</p>
         </div>
-        <p className="text-2xl text-forground dark:text-gray-200 pl-5">{eMail}</p>
+        <p className="text-2xl text-forground dark:text-gray-200 pl-5">
+          {eMail}
+        </p>
       </div>
-
     </div>
   );
 }
