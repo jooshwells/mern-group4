@@ -56,7 +56,7 @@ export const register_user = async (req, res, next) => {
  * @Condition
  * @Postcondition
  */
-export const login_user = (req, res) => {
+export const login_user = async (req, res, next) => {
   try {
     const { user } = req.body;
     const session_token = jwt.sign(
@@ -64,10 +64,12 @@ export const login_user = (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    initialize_session_cookie(req, res, session_token);
+    await initialize_session_cookie(req, res, session_token, next);
     // console.log(res);
     return res.status(200).send("User logged in successfully!");
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 /**
@@ -222,13 +224,14 @@ export const send_verification_email = async (req, res, next) => {
  * @Condition
  * @Postcondition
  */
-export const initialize_session_cookie = async (req, res, session_token) => {
+export const initialize_session_cookie = async (req, res, session_token, next) => {
   try {
     res.cookie("nanta-session", session_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
+      path: "/",
     });
   } catch (err) {
     next(err);
