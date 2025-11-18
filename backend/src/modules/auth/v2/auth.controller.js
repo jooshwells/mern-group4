@@ -30,32 +30,35 @@ import { normalize_system_error_response } from "../../../custom.middleware.js";
  */
 export const register_user = async (req, res, next) => {
   try {
-      const { first_name, last_name, email, password } = req.body;
-      const hash = await bcrypt.hash(password, 10);
-      const user = new User({ first_name, last_name, email, password: hash });
-      user.verification_token = jwt.sign(
-          { type: "email-verification-token", user: { _id: user._id, email: user.email } }, 
-          process.env.JWT_SECRET, 
-          {expiresIn: '12h'}
-      );
-      await user.save();
-      req.body.user = user;
-      
-      if (process.env.NODE_ENV != "test")
-          await send_verification_email(req, res, next);
-      
-      const session_token = jwt.sign(
-        { type: "session-token", user: { _id: user._id, email: user.email } },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
-      await initialize_session_cookie(req, res, session_token, next);
-      
-      return res.status(200).send("User registered successfully!");
+    const { first_name, last_name, email, password } = req.body;
+    const hash = await bcrypt.hash(password, 10);
+    const user = new User({ first_name, last_name, email, password: hash });
+    user.verification_token = jwt.sign(
+      {
+        type: "email-verification-token",
+        user: { _id: user._id, email: user.email },
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "12h" }
+    );
+    await user.save();
+    req.body.user = user;
+
+    if (process.env.NODE_ENV != "test")
+      await send_verification_email(req, res, next);
+
+    const session_token = jwt.sign(
+      { type: "session-token", user: { _id: user._id, email: user.email } },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    await initialize_session_cookie(req, res, session_token, next);
+
+    return res.status(200).send("User registered successfully!");
   } catch (err) {
-      next(err);
+    next(err);
   }
-}
+};
 
 /**
  * @Precondition
@@ -71,10 +74,27 @@ export const login_user = async (req, res, next) => {
       { expiresIn: "1h" }
     );
     await initialize_session_cookie(req, res, session_token, next);
-    // console.log(res);
-    return res.status(200).send("User logged in successfully!");
+
+    /*Change the return to return JSON that has user info for 
+    profile page use, and the token instead of cookies (better for mobile)*/
+    return res.status(200).json({
+      message: "User logged in successfully!",
+      token: session_token,
+      user: {
+        id: user._id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        is_verified: user.is_verified,
+        profile_pic: user.profile_pic,
+      },
+    });
   } catch (error) {
-    next(error);
+    return res.status(500).json({
+      succes: false,
+      message: "Login failed",
+      error: error.message,
+    });
   }
 };
 
@@ -165,14 +185,11 @@ export const verify_user_email = (req, res) => {
 
     user.verification_token = null;
     user.is_verified = true;
-    user.save()
-
+    user.save();
 
     return res.redirect("http://aedogroupfour-lamp.xyz/login?verified=true");
-    } catch (error) {
-        
-    }
-}
+  } catch (error) {}
+};
 
 /**
  * @Precondition
@@ -180,15 +197,16 @@ export const verify_user_email = (req, res) => {
  * @Postcondition
  */
 export const send_verification_email = async (req, res, next) => {
-
   const { user } = req.body;
 
   const verification_token = user.verification_token;
   user.verification_token = verification_token;
-  
-  await user.save(); 
 
-  const verification_link = "http://aedogroupfour-lamp.xyz/api/auth/user/verify-email/" + verification_token;
+  await user.save();
+
+  const verification_link =
+    "http://aedogroupfour-lamp.xyz/api/auth/user/verify-email/" +
+    verification_token;
 
   const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
@@ -208,7 +226,7 @@ export const send_verification_email = async (req, res, next) => {
   const rendered_html = ejs.render(html_template, {
     first_name: user.first_name,
     last_name: user.last_name,
-    verification_link: verification_link 
+    verification_link: verification_link,
   });
 
   const info = await transporter.sendMail({
@@ -228,7 +246,12 @@ export const send_verification_email = async (req, res, next) => {
  * @Condition
  * @Postcondition
  */
-export const initialize_session_cookie = async (req, res, session_token, next) => {
+export const initialize_session_cookie = async (
+  req,
+  res,
+  session_token,
+  next
+) => {
   try {
     res.cookie("nanta-session", session_token, {
       httpOnly: true,
