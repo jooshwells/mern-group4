@@ -28,6 +28,7 @@ import Draggable from "react-draggable";
 import { useRef, useState } from "react";
 import { useShortcut } from "@hookies/key-bindings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import HomeButton from "@/components/HomeButton";
 
 export function NoteEditorPage() {
   const { setTheme } = useTheme();
@@ -84,7 +85,7 @@ export function NoteEditorPage() {
 
   return (
     <div className="">
-      <div className="absolute right-4 z-50 top-4">
+      <div className="absolute right-4 z-50 top-4 flex items-center gap-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
@@ -105,6 +106,8 @@ export function NoteEditorPage() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <HomeButton/>
       </div>
       <SidebarProvider className="">
         <AppSidebar
