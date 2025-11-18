@@ -174,49 +174,47 @@ export const verify_user_email = (req, res) => {
  * @Postcondition
  */
 export const send_verification_email = async (req, res, next) => {
-  try {
-    const { user } = req.body;
 
-    const verification_token = user.verification_token
-    user.verification_token = verification_token;
-    user.save();
+  const { user } = req.body;
 
-    const verification_link = "http://aedogroupfour-lamp.xyz/api/auth/user/verify-email/" + verification_token;
+  const verification_token = user.verification_token;
+  user.verification_token = verification_token;
+  
+  await user.save(); 
 
-    const transporter = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        secure: false,
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS,
-        },
-    });
+  const verification_link = "http://aedogroupfour-lamp.xyz/api/auth/user/verify-email/" + verification_token;
 
-    const html_template = fs.readFileSync(
-      "./src/modules/auth/v2/auth.verification-email.html",
-      "utf8"
-    );
+  const transporter = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    secure: false,
+    auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
+    },
+  });
 
-    const rendered_html = ejs.render(html_template, {
-      first_name: user.first_name,
-      last_name: user.last_name,
-    });
+  const html_template = fs.readFileSync(
+    "./src/modules/auth/v2/auth.verification-email.html",
+    "utf8"
+  );
 
-    const info = await transporter.sendMail({
-      from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM}>`,
-      to: `${user.email}`,
-      subject: "Verification Email",
-      html: rendered_html,
-    });
+  const rendered_html = ejs.render(html_template, {
+    first_name: user.first_name,
+    last_name: user.last_name,
+    verification_link: verification_link 
+  });
 
-    console.log(info);
+  const info = await transporter.sendMail({
+    from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM}>`,
+    to: `${user.email}`,
+    subject: "Verification Email",
+    html: rendered_html,
+  });
 
-    return info;
-  } catch (err) {
-    // console.log(err);
-    next(err);
-  }
+  console.log(info);
+
+  return info;
 };
 
 /**
