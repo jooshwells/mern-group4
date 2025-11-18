@@ -77,7 +77,7 @@ export function NoteEditorPage() {
     });
     setTimeout(() => {
       setSaving(false);
-    }, 600);
+    }, 1000);
   };
 
   const nodeRef = useRef(null);
@@ -166,7 +166,7 @@ export function NoteEditorPage() {
               <CheckCircle2Icon />
               <AlertTitle>Success! Your changes have been saved</AlertTitle>
               <AlertDescription>
-                This is an alert with icon, title and description.
+                Now get back to work!
               </AlertDescription>
             </Alert>
           </div>

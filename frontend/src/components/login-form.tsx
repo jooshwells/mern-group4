@@ -50,7 +50,7 @@ export function LoginForm({
         return   
       }
 
-      navigate("/profile")
+      navigate("/edit")
 
     } catch (err) {
       console.error("Server error. Please try again later")
