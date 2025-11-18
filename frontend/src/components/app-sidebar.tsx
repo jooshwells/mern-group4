@@ -31,6 +31,9 @@ import {
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 
+const images = import.meta.glob("../assets/*.jpg", { eager: true, as: "url" });
+const profileOptions = Object.values(images);
+
 // This is sample data.
 const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
@@ -208,8 +211,31 @@ export function AppSidebar({
   };
 
   useEffect(() => {
+    fetchUser();
     fetchNotes();
   }, []);
+
+  const [profileIndex, setProfileIndex] = useState(0);
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch("/api/auth/user", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setProfileIndex(data.data.user.profile_pic || 0);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
 
   const fetchNotes = () => {
     fetch("/api/notes/")
@@ -261,7 +287,7 @@ export function AppSidebar({
     if (noteId == id) {
       setNoteId("");
     }
-    fetchNotes();
+    await fetchNotes();
   };
 
   const handleSaveButton = async () => {
@@ -351,9 +377,11 @@ export function AppSidebar({
         <Button onClick={handleSaveButton}>Save (Ctrl+S)</Button>
         <a className="m-auto" href="/profile">
           {/* <Button> */}
-          <CircleUserRound
+          <img
+            src={String(profileOptions[profileIndex])}
+            alt="User Profile Picture"
             className="rounded-xs hover:bg-sidebar-border"
-            size={56}
+            style={{ width: "56px", height: "56px" }}
           />
           {/* </Button> */}
         </a>

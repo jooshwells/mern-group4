@@ -36,7 +36,7 @@ export function SignupForm({  }: React.ComponentProps<typeof Card>) {
       console.log(res);
   
       if (res.ok) {
-          navigate("/profile");
+          navigate("/edit");
       }
     } catch (err) {
       console.error("Server error. Please try again later")
