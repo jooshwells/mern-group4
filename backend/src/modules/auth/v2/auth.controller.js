@@ -44,6 +44,12 @@ export const register_user = async (req, res, next) => {
       if (process.env.NODE_ENV != "test")
           await send_verification_email(req, res, next);
       
+      const session_token = jwt.sign(
+        { type: "session-token", user: { _id: user._id, email: user.email } },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+      await initialize_session_cookie(req, res, session_token, next);
       
       return res.status(200).send("User registered successfully!");
   } catch (err) {
