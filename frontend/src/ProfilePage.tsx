@@ -5,6 +5,8 @@ import Pfptop from "./components/PFPTOP.tsx";
 import EditAccount from "./components/EditAccount.tsx";
 import RecentWork from "./components/RecentWork.tsx";
 import { Toaster } from "sonner";
+import { ButtonGroup } from "./components/ui/button-group.tsx";
+import NotesButton from "./components/NotesButton.tsx";
 
 const ProfilePage: React.FC = () => {
   const [hide, setVisible] = useState(false);
@@ -21,7 +23,10 @@ const ProfilePage: React.FC = () => {
       {/* Theme and Home */}
       <Theme />
       <div className="absolute right-4 top-4">
-        <HomeButton className="bg-amber-300" />
+        <ButtonGroup className="gap-7">
+          <NotesButton />
+          <HomeButton />
+        </ButtonGroup>
       </div>
 
       <Toaster richColors position="top-center" />
