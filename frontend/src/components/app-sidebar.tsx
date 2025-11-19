@@ -18,7 +18,7 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CircleUserRound, Plus, Trash2 } from "lucide-react";
+import { CircleUserRound, Edit, Plus, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -172,7 +172,7 @@ type propType = {
   setNoteContent: (a: any) => void;
   setNoteId: (a: string) => void;
   setNoteTitle: (a: string) => void;
-  handleSave: () => void;
+  handleSave: (id?: string, title?: string, content?: any) => void;
 };
 
 export function AppSidebar({
@@ -213,6 +213,7 @@ export function AppSidebar({
   useEffect(() => {
     fetchUser();
     fetchNotes();
+    console.log(noteData);
   }, []);
 
   const [profileIndex, setProfileIndex] = useState(0);
@@ -241,6 +242,7 @@ export function AppSidebar({
     fetch("/api/notes/")
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.notes.length != 0) {
           setNoteData({
             navMain: [
@@ -273,14 +275,33 @@ export function AppSidebar({
   };
 
   const handleOpenNote = (id: string, content: string, title: string) => {
-    setNoteId(id);
-    console.log(id);
-    setNoteTitle(title);
-    setNoteContent(JSON.parse(content));
-    fetchNotes();
+    if (id != "#") {
+      setNoteId(id);
+      console.log(id);
+      setNoteTitle(title);
+      setNoteContent(JSON.parse(content));
+      fetchNotes();
+    }
   };
 
   const handleDeleteNote = async (id: string) => {
+    let filteredNotes = [...noteData.navMain[0].notes];
+    filteredNotes[filteredNotes.findIndex((e) => e._id == id)]._id = "deleted";
+    // filteredNotes.splice(
+    //   noteData.navMain[0].notes.findIndex((e) => e._id == id),
+    //   1
+    // );
+    console.log(filteredNotes);
+    setNoteData({
+      navMain: [
+        {
+          title: "Notes",
+          _id: "#",
+          notes: filteredNotes,
+        },
+      ],
+    });
+    // setTimeout(() => {}, 300);
     await fetch(`/api/notes/${id}`, {
       method: "DELETE",
     });
@@ -291,7 +312,28 @@ export function AppSidebar({
   };
 
   const handleSaveButton = async () => {
-    await handleSave();
+    handleSave();
+  };
+
+  const handleRenameNote = async (
+    e: any,
+    id: string,
+    title: string,
+    content: string
+  ) => {
+    e.preventDefault();
+    await fetch(`/api/notes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        title: e.target.title.value,
+        content: content,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    // handleSave(_id, e.target.title.value, JSON.parse(_content));
+    fetchNotes();
   };
 
   return (
@@ -313,10 +355,14 @@ export function AppSidebar({
             <SidebarGroupContent>
               <SidebarMenu>
                 {item.notes.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem>
                     <SidebarMenuButton asChild>
                       <div
-                        className={`${noteId == item._id && "bg-border"} mb-1`}
+                        className={`${noteId == item._id && "bg-border"} ${
+                          item._id == "deleted"
+                            ? "-translate-x-96  "
+                            : "transition-none"
+                        } duration-500 transition-all mb-1`}
                       >
                         <a
                           onClick={() =>
@@ -328,12 +374,61 @@ export function AppSidebar({
                           {item.title}
                         </a>
                         {/* <div className="grow"></div> */}
-                        <div
-                          onClick={() => handleDeleteNote(item._id)}
-                          className="rounded-[100%] hover:bg-sidebar-ring p-1"
-                        >
-                          <Trash2 />
-                        </div>
+                        {item._id != "#" ? (
+                          <>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <div className="rounded-[100%] hover:bg-sidebar-ring p-1">
+                                  <Edit />
+                                </div>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <form
+                                  onSubmit={(e) =>
+                                    handleRenameNote(
+                                      e,
+                                      item._id,
+                                      item.title,
+                                      item.content
+                                    )
+                                  }
+                                >
+                                  <DialogHeader>
+                                    <DialogTitle>Rename</DialogTitle>
+                                    <DialogDescription>
+                                      Choose the title of your note.
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="grid gap-4">
+                                    <div className="grid gap-3">
+                                      <Label htmlFor="title">New Title</Label>
+                                      <Input
+                                        id="title"
+                                        name="title"
+                                        defaultValue={item.title}
+                                      />
+                                    </div>
+                                  </div>
+                                  <DialogFooter>
+                                    <DialogClose asChild>
+                                      <Button className="m-1" type="submit">
+                                        Save changes
+                                      </Button>
+                                    </DialogClose>
+                                  </DialogFooter>
+                                </form>
+                              </DialogContent>
+                            </Dialog>
+                            <div
+                              onClick={() => handleDeleteNote(item._id)}
+                              className="rounded-[100%] hover:bg-sidebar-ring p-1"
+                            >
+                              <Trash2 />
+                            </div>
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -355,7 +450,7 @@ export function AppSidebar({
               <DialogHeader>
                 <DialogTitle>Create new note</DialogTitle>
                 <DialogDescription>
-                  Choose the title of your note. This cannot be changed later.
+                  Choose the title of your note.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4">
