@@ -48,21 +48,21 @@ function App() {
 
       {/* notes preview */}
       <motion.img
-        src="/notes-light.png"
+        src="/note-light.png"
         alt="Notes preview in light mode"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="w-[1050px] h-[670px] object-fill rounded-2xl p-2 border-2 border-foreground dark:hidden"
+        className="w-[70%] h-auto object-contain rounded-2xl p-2 border-2 border-foreground dark:hidden"
       />
 
       <motion.img
-        src="/notes-dark.png"
+        src="/note-dark.png"
         alt="Notes preview in dark mode"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="w-[1050px] h-[670px] object-fill rounded-2xl p-2 border-2 border-foreground hidden dark:block"
+        className="w-[70%] h-auto object-contain rounded-2xl p-2 border-2 border-foreground hidden dark:block"
       />
 
       {/* reviews wrapper */}
