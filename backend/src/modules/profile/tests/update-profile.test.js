@@ -129,7 +129,8 @@ describe("/api/profile/update-info", () => {
         const update_response = await request(app)
         .put("/api/profile/update-info")
         .send({
-            password : "new_awesome_password"
+            password : "new_awesome_password",
+            old_password : "password123"
         })
         .set("Cookie", cookie);
 

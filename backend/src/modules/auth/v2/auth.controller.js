@@ -54,7 +54,18 @@ export const register_user = async (req, res, next) => {
     );
     await initialize_session_cookie(req, res, session_token, next);
 
-    return res.status(200).send("User registered successfully!");
+    return res.status(200).json({
+      message: "User registered successfully!",
+      token: session_token,
+      user: {
+        id: user._id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        is_verified: user.is_verified,
+        profile_pic: user.profile_pic,
+      },
+    });
   } catch (err) {
     next(err);
   }
