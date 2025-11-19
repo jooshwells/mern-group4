@@ -64,13 +64,17 @@ export function NoteEditorPage() {
     }
   );
 
-  const handleSave = async () => {
+  const handleSave = async (
+    id = currentNoteId,
+    title = currentNoteTitle,
+    content = currentNoteContent
+  ) => {
     setSaving(true);
-    await fetch(`/api/notes/${currentNoteId}`, {
+    await fetch(`/api/notes/${id}`, {
       method: "PUT",
       body: JSON.stringify({
-        title: currentNoteTitle,
-        content: JSON.stringify(currentNoteContent),
+        title: title,
+        content: JSON.stringify(content),
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
