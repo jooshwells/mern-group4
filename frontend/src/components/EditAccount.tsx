@@ -36,7 +36,7 @@ function EditAccount({ className }: EditAccountProps) {
     first_name: "",
     last_name: "",
     email: "",
-    old_password: "",
+    currentPassword: "",
     password: "",
     confirm_password: "",
   });
@@ -106,12 +106,11 @@ function EditAccount({ className }: EditAccountProps) {
         setLoading(false);
         return;
       }
-      /*
-      if (!formData.old_password) {
+
+      if (!formData.currentPassword) {
         toast.error("Please enter your old password.");
-        setLoading(false);
         return;
-      }*/
+      }
     }
 
     try {
@@ -124,7 +123,7 @@ function EditAccount({ className }: EditAccountProps) {
 
       // Only include password fields if changing password
       if (showPassword && formData.password) {
-        updatePayload.old_password = formData.old_password;
+        updatePayload.old_password = formData.currentPassword;
         updatePayload.password = formData.password;
       }
 
@@ -255,7 +254,19 @@ function EditAccount({ className }: EditAccountProps) {
                   showPassword ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <div className="flex gap-5 mt-3">
+                <div className="flex flex-row gap-5 mt-3">
+                  <div className="flex flex-col flex-1 gap-3">
+                    <Label className="font-bold">Current Password</Label>
+                    <Input
+                      type="password"
+                      name="currentPassword"
+                      placeholder="Confirm Current Password"
+                      value={formData.currentPassword}
+                      onChange={handleInputChange}
+                      className="rounded-3xl"
+                    />
+                  </div>
+
                   <div className="flex flex-col flex-1 gap-3">
                     <Label className="font-bold">New Password</Label>
                     <Input
