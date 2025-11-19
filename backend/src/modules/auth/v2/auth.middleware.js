@@ -172,10 +172,7 @@ export const validate_session_token = async (req, res, next) => {
     if (!token)
       return res.status(400).send({ authorization_status: "Unauthorized" });
 
-    const session_token = jwt.verify(
-      req.cookies["nanta-session"],
-      process.env.JWT_SECRET
-    );
+    const session_token = jwt.verify(token, process.env.JWT_SECRET);
 
     if (session_token.type !== "session-token")
       return res.status(400).send({ authorization_status: "Unauthorized" });

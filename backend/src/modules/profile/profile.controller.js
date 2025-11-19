@@ -11,9 +11,15 @@ export const update_profile = async (request, response) => {
         .status(401)
         .json({ request, message: "User not authenticated!" });
     }
-
-    const { first_name, last_name, email, password, profile_pic } =
-      request.body;
+    //Changed below line to destructure old password (confimration)
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      profile_pic,
+      old_password,
+    } = request.body;
 
     const updateFields = {};
     if (first_name) updateFields.first_name = first_name;
@@ -25,41 +31,66 @@ export const update_profile = async (request, response) => {
     }
 
     if (password) {
+      //Check if the user did give the old password
+      if (!old_password) {
+        return response.status(400).json({
+          message: "Current password must be confirmed to change password",
+        });
+      }
       if (password.length < 8) {
         return response
           .status(400)
           .json({ message: "Password must be at least 8 characters." });
       }
+      //--------Old password verififcation---------
+
+      //Retrieve the user's model
+      const currUser = await User.findById(user_id);
+      if (!currUser) {
+        return response
+          .status(404)
+          .json({ message: "Error retrieiving current user info" });
+      }
+
+      const passwordConfirmation = await bcrypt.compare(
+        old_password,
+        currUser.password
+      );
+      if (passwordConfirmation != true) {
+        return response
+          .status(400)
+          .json({ message: "Incorrect old password." });
+      }
       updateFields.password = await bcrypt.hash(password, 10);
     }
 
-        try {
-            const updatedUser = await User.findByIdAndUpdate(
-                user_id,
-                { $set: updateFields },
-                { 
-                    new: true, 
-                    runValidators: true
-                }
-            ).select('-password');
-
-            if (!updatedUser) {
-            return response.status(404).json({ message: "User not found." });
-            }
-
-            return response.status(200).json({
-                message: "Profile updated successfully!",
-                user: updatedUser.toObject() 
-            });
-        } catch (err) {
-            if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
-                return response.status(409).json({
-                    message: "This email address is already in use."
-                });
-            }
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        user_id,
+        { $set: updateFields },
+        {
+          new: true,
+          runValidators: true,
         }
+      ).select("-password");
 
-    } catch (error) {
-        normalize_system_error_response(error, response);
+      if (!updatedUser) {
+        return response.status(404).json({ message: "User not found." });
+      }
+
+      return response.status(200).json({
+        message: "Profile updated successfully!",
+        user: updatedUser.toObject(),
+      });
+    } catch (err) {
+      if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
+        return response.status(409).json({
+          message: "This email address is already in use.",
+        });
+      }
+      throw err;
     }
-}
+  } catch (error) {
+    normalize_system_error_response(error, response);
+  }
+};
